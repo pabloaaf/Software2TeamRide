@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { NavController, AlertController, LoadingController, Loading } from 'ionic-angular';
-import { AuthService } from '../../providers/auth-service/auth-service';
+//import { AuthService } from '../../providers/auth-service/auth-service';
 import { RegisterPage } from '../register/register';
-import { TabsPage } from '../tabs/tabs';
+import { TabsInitPage } from '../tabsInit/tabsInit';
 
+import { AuthProvider } from '../../providers/auth/auth';
 /**
  * Generated class for the LoginPage page.
  *
@@ -17,9 +18,9 @@ import { TabsPage } from '../tabs/tabs';
 })
 export class LoginPage {
   loading: Loading;
-  registerCredentials = { email: '', password: '' };
+  registerCredentials = { email: '', password: '' }; //registerCredentials
  
-  constructor(private nav: NavController, private auth: AuthService, private alertCtrl: AlertController, private loadingCtrl: LoadingController) { }
+  constructor(private nav: NavController, private auth: AuthProvider, private alertCtrl: AlertController, private loadingCtrl: LoadingController) { } //AuthService
  
   public createAccount() {
     this.nav.push(RegisterPage);
@@ -27,7 +28,15 @@ export class LoginPage {
  
   public login() {
     this.showLoading()
-    this.auth.login(this.registerCredentials).subscribe(allowed => {
+    this.auth.loginUser(this.registerCredentials.email,this.registerCredentials.password)
+    .then((user) => {
+    	this.nav.setRoot(TabsInitPage);
+    })
+    .catch(err=>{
+    	this.showError("Acceso Denegado");
+    })
+  }
+ /*   this.auth.login(this.registerCredentials).subscribe(allowed => {
       if (allowed) {        
         this.nav.setRoot(TabsPage);
       } else {
@@ -37,7 +46,7 @@ export class LoginPage {
       error => {
         this.showError(error);
       });
-  }
+  }*/
  
   showLoading() {
     this.loading = this.loadingCtrl.create({
@@ -51,7 +60,7 @@ export class LoginPage {
     this.loading.dismiss();
  
     let alert = this.alertCtrl.create({
-      title: 'Fail',
+      title: 'Error',
       subTitle: text,
       buttons: ['OK']
     });

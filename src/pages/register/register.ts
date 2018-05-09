@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
 import { NavController, AlertController } from 'ionic-angular';
-import { AuthService } from '../../providers/auth-service/auth-service';
+//import { AuthService } from '../../providers/auth-service/auth-service';
+
+import { AuthProvider } from '../../providers/auth/auth';
+import { FirebaseDbProvider } from '../../providers/firebase-db/firebase-db';
 
 @Component({
   selector: 'page-register',
@@ -8,24 +11,28 @@ import { AuthService } from '../../providers/auth-service/auth-service';
 })
 export class RegisterPage {
   createSuccess = false;
-  registerCredentials = { email: '', password: '' };
- 
-  constructor(private nav: NavController, private auth: AuthService, private alertCtrl: AlertController) { }
- 
-  public register() {
-    this.auth.register(this.registerCredentials).subscribe(success => {
-      if (success) {
-        this.createSuccess = true;
-        this.showPopup("Success", "Account created.");
-      } else {
-        this.showPopup("Error", "Problem creating account.");
+  registerCredentials = { email: '', password: '', team: '' }; //registerCredentials
+  teams;
+
+  constructor(private nav: NavController, private auth: AuthProvider, private db:FirebaseDbProvider, private alertCtrl: AlertController) { 
+    this.teams = [];
+    this.db.getTeams().subscribe(equipos=>{
+      for(var i = 0; i < equipos.length; i++){
+        this.teams.push(equipos[i].nombre);
       }
-    },
-      error => {
-        this.showPopup("Error", error);
-      });
+    });
   }
  
+  public register() {
+    this.auth.registerUser(this.registerCredentials)
+    .then((user) => {
+    	this.showPopup("Success", "Account created.");
+    })
+    .catch(err=>{
+    	this.showPopup("Error", "Problem creating account.");
+    });
+  }
+
   showPopup(title, text) {
     let alert = this.alertCtrl.create({
       title: title,
@@ -47,5 +54,4 @@ export class RegisterPage {
   ionViewDidLoad() {
     console.log('ionViewDidLoad RegisterPage');
   }
-
 }
