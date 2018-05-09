@@ -1,0 +1,8 @@
+{
+  "name": "TeamRide",
+  "app_id": "189be289",
+  "type": "ionic-angular",
+  "integrations": {
+    "cordova": {}
+  }
+}
