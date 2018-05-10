@@ -1,0 +1,18 @@
+Primera reunión 15/04/2018
+En esta reunión se concretan los objetivos iniciales del proyecto, como las obligaciones de cada uno: 
+	-Pablo se encargará del back-end.
+	-Daniel se encargará del front-end
+	-Enrique de la base de datos y un apoyo para el resto de compañeros.
+Asimismo se divide los componentes del scrum, de forma que el Scrum Master es Enrique, Pablo es el Product Owner y como equipo de desarrollo queda Daniel. Como Stakeholders se basará en feedbacks dados por el equipo de balonmano al que Pablo pertenece.
+
+Por último se detalla la nomenclatura a usar a lo largo del proyecto:
+	-Las rutas serán todas en minúsculas, y en caso de tener más de una palabra se separará con "_". Las rutas serán en plural y si después de esa ruta se encuentra un número se devolverá ese id en singular.
+	-Los nombres de variables y los métodos serán en minúscula, en caso de contener más de una palabra, ésta comenzará en mayúscula.
+	-Las variables global comenzarán con "__".
+	-Tanto los métodos como las variables serán en inglés.
+	-A poder ser, los métodos serán privados.
+	-El texto ha de estar correctamente indentado.
+	-Todas las variables utilizadas en el front-end se declararán como globales de su typeScript.
+	-Las variables que no cambien se declararán como cons.
+	-Se intentará, en su mayor medida, no declarar variables como var.
+	-Los nombres de las tablas en la base de datos será completamente en mayúsculas.

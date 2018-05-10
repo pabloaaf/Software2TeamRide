@@ -1,0 +1,8 @@
+22/04/2018
+Se establece el repositorio de GIT a utilizar.
+En él se sube la primera versión de la Base de datos.
+También se levanta el servidor  node con dos peticiones.
+Se marcan futuros hitos:
+	-Crear las historias de usuario a realizar en el proyecto.
+	-Avanzar en conocimientos de la tecnología de ionic.
+
