@@ -30,10 +30,10 @@ CREATE TABLE `cars` (
   `id` int(11) NOT NULL,
   `ownerID` int(11) NOT NULL,
   `owner` varchar(50) NOT NULL,
-  `teamID` int(11) NOT NULL,
   `team` varchar(50) NOT NULL, 
   `spendingGas` float NOT NULL,
-  `model` varchar(50) NOT NULL
+  `model` varchar(50) NOT NULL,
+  `seats` int(11) NOT NULL,
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -56,9 +56,11 @@ CREATE TABLE `players` (
   `id` int(11) NOT NULL,
   `team` varchar(50) NOT NULL,
   `name` varchar(50) NOT NULL,
-  `email` varchar(50) DEFAULT NULL,
   `nick` varchar(50) NOT NULL,
-  `debt` varchar(50) NOT NULL
+  `dorsal` int(11) NOT NULL,
+  `debt` varchar(50) NOT NULL,
+  `email` varchar(50) DEFAULT NULL,
+  `password` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -68,8 +70,7 @@ CREATE TABLE `players` (
 --
 
 CREATE TABLE `teams` (
-  `id` int(11) NOT NULL,
-  `name` varchar(50) NOT NULL
+  `name` varchar(50) NOT NULL,
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -110,7 +111,7 @@ ALTER TABLE `players`
 -- Indices de la tabla `teams`
 --
 ALTER TABLE `teams`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`name`);
 
 --
 -- Indices de la tabla `teams_pav_rel`
@@ -132,15 +133,7 @@ ALTER TABLE `cars`
 --
 ALTER TABLE `players`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT de la tabla `teams`
---
-ALTER TABLE `teams`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
-
-  
+ 
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
