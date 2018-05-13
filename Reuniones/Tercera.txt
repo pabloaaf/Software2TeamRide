@@ -1,0 +1,7 @@
+03/05/2018
+Se tiene gran parte de las historias de usuario.
+Se marcan como objetivos de sprint:
+	-Realizar el login y los registros a la aplicación.
+	-Mostrar y registrar equipos.
+	-Mostrar jugadores de cierto equipo.
+	-Añadir y mostrar coches de los equipos.
