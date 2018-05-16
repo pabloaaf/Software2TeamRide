@@ -1,18 +1,41 @@
-<!--
-  Generated template for the JugadoresEditPage page.
-
-  See http://ionicframework.com/docs/components/#navigation for more info on
-  Ionic pages and navigation.
--->
-<ion-header>
-
-  <ion-navbar>
-    <ion-title>jugadoresEdit</ion-title>
-  </ion-navbar>
-
-</ion-header>
-
-
 <ion-content padding>
-
+	<form #registerForm="jugForm"(ngSubmit)="saveData()">
+		<ion-list>
+			<ion-item>
+				<ion-icon name="person" item-start></ion-icon>
+				<ion-label stacked>Nombres:</ion-label>
+				<ion-input [(ngModel)] = "player.nombre" type="text" placeholder="Nombre" required></ion-input>
+			</ion-item>
+			<ion-item>
+				<ion-icon name="person" item-start></ion-icon>
+				<ion-label stacked>Apodo:</ion-label>
+				<ion-input [(ngModel)] = "player.apodo" type="text" placeholder="Apellidos"></ion-input>
+			</ion-item>
+			<ion-item>
+				<ion-icon name="people" item-start></ion-icon>
+				<ion-label stacked>Dorsal:</ion-label>
+				<ion-input [(ngModel)] = "player.dorsal" type="number" placeholder="numero de dorsal" required></ion-input>
+			</ion-item>
+		</ion-list>
+		<div padding>
+			<button ion-button block type="submit" [disabled]="!jugForm.valid">Guardar</button>
+		</div>
+	</form>
 </ion-content>
+
+<!--
+<mbsc-card [options]="settings">
+<mbsc-card-header>
+<mbsc-card-title>Confirm Purchase</mbsc-card-title>
+</mbsc-card-header>
+<mbsc-card-content>
+<mbsc-input [(ngModel)]="name" placeholder="Required">Name</mbsc-input>
+<mbsc-input [(ngModel)]="card" placeholder="Credit card number">Card</mbsc-input>
+<mbsc-input [(ngModel)]="exp" placeholder="Required">Expiration</mbsc-input>
+<mbsc-input [(ngModel)]="cvv" placeholder="3-digit CVV">Security</mbsc-input>
+</mbsc-card-content>
+<div class="mbsc-btn-group-block mbsc-padding">
+<mbsc-button color="primary">Confirm</mbsc-button>
+</div>
+</mbsc-card>
+-->

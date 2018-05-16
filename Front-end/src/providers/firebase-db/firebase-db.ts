@@ -1,5 +1,8 @@
 import { Injectable } from '@angular/core';
 import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
+import { AuthProvider } from '../auth/auth';
+import { Observable } from 'rxjs/Observable';
+
 /*
   Generated class for the FirebaseDbProvider provider.
 
@@ -9,19 +12,8 @@ import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
 @Injectable()
 export class FirebaseDbProvider {
   team = '';
-  constructor(public afDB: AngularFireDatabase) {
+  constructor(public afDB: AngularFireDatabase, public auth:AuthProvider) {
     console.log('Hello FirebaseDbProvider Provider');
-  }
-  guardaSitio(sitio){
-     sitio.id  = Date.now();
-     return this.afDB.database.ref('sitios/'/*+this.auth.getUser() Aqui ira el id del equipo+'/'*/+sitio.id).set(sitio)
-  }
-
-  getSitios(){
-    return this.afDB.list('sitios/').valueChanges();
-  }
-  getSitio(id){
-    return this.afDB.list('sitios/'+id).valueChanges();
   }
 
   getTeams(){
@@ -55,5 +47,13 @@ export class FirebaseDbProvider {
     }else{
       return this.team;
     }
+  }
+
+  añadirjugador(player){
+    return Observable.create(observer => {
+      this.afDB.database.ref(this.getUserTeam(this.auth.getUser())+'/').push(player);
+      observer.next(true);
+      observer.complete();
+    });
   }
 }

@@ -14,7 +14,7 @@ export class AuthProvider {
     return this.afAuth.auth.createUserWithEmailAndPassword(credentials.email, credentials.password)
     .then((res)=>{
       // El usuario se ha creado correctamente.
-      this.db.saveUser(res.uid, credentials.team);
+      this.db.saveUserTeam(res.uid, credentials.team);
     })
     .catch(err=>console.log(err))
  }
