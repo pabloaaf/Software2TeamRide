@@ -4,23 +4,22 @@ import { Component } from '@angular/core';
 //import { LoginPage } from '../login/login';
 
 import { AuthProvider } from '../../providers/auth/auth';
+import { FirebaseDbProvider } from '../../providers/firebase-db/firebase-db';
 
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html'
 })
 export class HomePage {
-  username = '';
   email = '';
-  constructor(private auth: AuthProvider) { //private nav: NavController
+  team = '';
+  constructor(private auth: AuthProvider, private db: FirebaseDbProvider) {
     //let info = this.auth.getUserInfo();
-    //this.username = info['name'];
-    //this.email = info['email'];
+    this.email = this.auth.getUser().email;
+    this.team = this.db.getUserTeam(this.auth.getUser().uid);
   }
  
   public logout() {
-    this.auth.logout(); //     this.nav.push(LoginPage)
-
+    this.auth.logout();
   }
-
 }

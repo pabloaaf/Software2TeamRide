@@ -15,9 +15,8 @@ export class AuthProvider {
     .then((res)=>{
       // El usuario se ha creado correctamente.
       this.db.saveUser(res.uid, credentials.team);
-
     })
-    .catch(err=>Promise.reject(err))
+    .catch(err=>console.log(err))
  }
 
   // Login de usuario
@@ -41,6 +40,6 @@ export class AuthProvider {
 
  // Obtenemos el id de usuario.
  getUser(){
-    return this.afAuth.auth.currentUser.uid;
+    return this.afAuth.auth.currentUser;
  }
 }

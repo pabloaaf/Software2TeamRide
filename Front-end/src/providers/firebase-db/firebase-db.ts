@@ -8,7 +8,7 @@ import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
 */
 @Injectable()
 export class FirebaseDbProvider {
-
+  team = '';
   constructor(public afDB: AngularFireDatabase) {
     console.log('Hello FirebaseDbProvider Provider');
   }
@@ -29,23 +29,31 @@ export class FirebaseDbProvider {
   }
 
   registerTeam(equipo){
-    let aux = 0;
-    let teams = getTeams();
-    for(var i = 0; i < teams.length; i++){        
-      if(equipo === teams[i].name){
-        aux++;
-        console.log("aux :"+teams[i].name);
-      }
-    }
-    if(aux===0){
-      console.log(equipo);
-      this.afDB.database.ref('teams/').set(equipo);
-      this.afDB.database.ref('teams/'+equipo+'/nombre/').set(equipo);
-    }
+    this.afDB.database.ref('teams/').push(equipo);
+    this.afDB.database.ref('teams/'+equipo+'/nombre/').set(equipo);
   }
 
-  saveUser(uid, team){
-    registerTeam(team);
-    return this.afDB.database.ref('teams/'+team+"/registrados/").set(uid);
+  saveUserTeam(uid, team){
+    this.team = team;
+    return this.afDB.database.ref('teams/'+team+"/registrados").push(uid);
+  }
+
+  getUserTeam(uid){
+    console.log("  hola ");
+    if(this.team === ''){
+      this.getTeams().subscribe(equipos=>{
+        console.log(equipos);
+        for(var i = 0; i < equipos.length; i++){
+          //for(var j = 0; j < equipos[i].registrados.length; j++){
+            if(uid === equipos[i].registrados){
+              this.team = equipos[i].nombre;
+              return this.team;
+            }
+          //}
+        }
+      });
+    }else{
+      return this.team;
+    }
   }
 }

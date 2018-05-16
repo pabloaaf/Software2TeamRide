@@ -24,6 +24,15 @@ export class RegisterPage {
   }
  
   public register() {
+    let aux = 0;
+    for(var i = 0; i < this.teams.length; i++){        
+      if(this.registerCredentials.team === this.teams[i]){
+        aux++;
+      }
+    }
+    if(aux===0){
+      this.db.registerTeam(this.registerCredentials.team);
+    }
     this.auth.registerUser(this.registerCredentials)
     .then((user) => {
     	this.showPopup("Success", "Account created.");
