@@ -1,0 +1,5 @@
+12/05/2018
+Se sigue con el front-end y se detallan aspectos del back-end y de la base de datos. También se reestructura la base de datos (arreglar algunas características)
+Objetivos:
+    -Terminar los hitos anteriores 
+    -Terminar el controlador y las llamadas a la base de datos
