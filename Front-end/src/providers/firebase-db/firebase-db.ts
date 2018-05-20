@@ -1,7 +1,5 @@
-import { Injectable } from '@angular/core';
-import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
-import { AuthProvider } from '../auth/auth';
-import { Observable } from 'rxjs/Observable';
+import {Injectable} from '@angular/core';
+import {AngularFireDatabase} from 'angularfire2/database'; // AngularFireList
 
 /*
   Generated class for the FirebaseDbProvider provider.
@@ -12,48 +10,54 @@ import { Observable } from 'rxjs/Observable';
 @Injectable()
 export class FirebaseDbProvider {
   team = '';
-  constructor(public afDB: AngularFireDatabase, public auth:AuthProvider) {
+
+  constructor(public afDB: AngularFireDatabase) {
     console.log('Hello FirebaseDbProvider Provider');
   }
 
-  getTeams(){
+  guardaSitio(sitio) {
+    sitio.id = Date.now();
+    return this.afDB.database.ref('sitios/'/*+this.auth.getUser() Aqui ira el id del equipo+'/'*/ + sitio.id).set(sitio)
+  }
+
+  getSitios() {
+    return this.afDB.list('sitios/').valueChanges();
+  }
+
+  getSitio(id) {
+    return this.afDB.list('sitios/' + id).valueChanges();
+  }
+
+  getTeams() {
     return this.afDB.list('teams/').valueChanges();
   }
 
-  registerTeam(equipo){
+  registerTeam(equipo) {
     this.afDB.database.ref('teams/').push(equipo);
-    this.afDB.database.ref('teams/'+equipo+'/nombre/').set(equipo);
+    this.afDB.database.ref('teams/' + equipo + '/nombre/').set(equipo);
   }
 
-  saveUserTeam(uid, team){
+  saveUserTeam(uid, team) {
     this.team = team;
-    return this.afDB.database.ref('teams/'+team+"/registrados").push(uid);
+    return this.afDB.database.ref('teams/' + team + "/registrados").push(uid);
   }
 
-  getUserTeam(uid){
+  getUserTeam(uid) {
     console.log("  hola ");
-    if(this.team === ''){
-      this.getTeams().subscribe(equipos=>{
+    if (this.team === '') {
+      this.getTeams().subscribe(equipos => {
         console.log(equipos);
-        for(var i = 0; i < equipos.length; i++){
+        for (var i = 0; i < equipos.length; i++) {
           //for(var j = 0; j < equipos[i].registrados.length; j++){
-            if(uid === equipos[i].registrados){
-              this.team = equipos[i].nombre;
-              return this.team;
-            }
+          /*if(uid === equipos[i].registrados){
+            this.team = equipos[i].nombre;
+            return this.team;
+          }*/
           //}
         }
       });
-    }else{
+    } else {
       return this.team;
     }
-  }
-
-  añadirjugador(player){
-    return Observable.create(observer => {
-      this.afDB.database.ref(this.getUserTeam(this.auth.getUser())+'/').push(player);
-      observer.next(true);
-      observer.complete();
-    });
   }
 }

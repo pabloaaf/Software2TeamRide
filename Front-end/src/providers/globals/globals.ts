@@ -1,61 +1,59 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
-/*
-  Generated class for the AuthServiceProvider provider.
-
-  See https://angular.io/guide/dependency-injection for more info on providers
-  and Angular DI.
-*/
-export class User {
-  uid: string;
-  email: string;
- 
-  constructor(uid: string, email: string) {
-    this.uid = uid;
-    this.email = email;
-  }
-}
+import { AlertController } from 'ionic-angular';
 
 @Injectable()
 export class GlobalsService {
-  currentUser: User;
- 
-  public login(credentials) {
-    if (credentials.email === null || credentials.password === null) {
-      return Observable.throw("Please insert credentials");
-    } else {
-      return Observable.create(observer => {
-        // At this point make a request to your backend to make a real check!
-        let access = (credentials.password === "pass" && credentials.email === "email"); //zona a cambiar
-        this.currentUser = new User('Simon', 'saimon@devdactic.com');
-        observer.next(access);
-        observer.complete();
-      });
-    }
+  public currentUser: User;
+
+  constructor(private alertCtrl: AlertController){
+
   }
- 
-  public register(credentials) {
-    if (credentials.email === null || credentials.password === null) {
-      return Observable.throw("Please insert credentials");
-    } else {
-      // At this point store the credentials to your backend!
-      return Observable.create(observer => {
-        observer.next(true);
-        observer.complete();
-      });
-    }
+
+  public login(credentials:User) {
+    this.currentUser = credentials;
   }
- 
-  public getUserInfo() : User {
-    return this.currentUser;
-  }
- 
-  public logout() {
-    return Observable.create(observer => {
-      this.currentUser = null;
-      observer.next(true);
-      observer.complete();
+
+  public showPopup(title, text) {
+    let alert = this.alertCtrl.create({
+      title: title,
+      subTitle: text,
+      buttons: [
+        {
+          text: 'OK',
+          handler: data => { }
+        }
+      ]
     });
+    alert.present();
   }
 }
+
+export class User {
+  uid: string;
+  email: string;
+  team: string;
+ 
+  constructor(uid: string, email: string, team:string) {
+    this.uid = uid;
+    this.email = email;
+    this.team = team;
+  }
+}
+
+export class Jugador {
+  nombre: string;
+  apodo: string;
+  dorsal: string;
+}
+
+export class Equipo {
+  //key
+  nombre:string;
+  registrados:string[];
+
+  constructor() {
+    this.registrados = [];
+  }
+}
+//global para equipos

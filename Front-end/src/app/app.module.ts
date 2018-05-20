@@ -1,33 +1,33 @@
-import { BrowserModule } from '@angular/platform-browser';
-import { ErrorHandler, NgModule } from '@angular/core';
-import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
-import { SplashScreen } from '@ionic-native/splash-screen';
-import { StatusBar } from '@ionic-native/status-bar';
+import {BrowserModule} from '@angular/platform-browser';
+import {ErrorHandler, NgModule} from '@angular/core';
+import {IonicApp, IonicErrorHandler, IonicModule} from 'ionic-angular';
+import {SplashScreen} from '@ionic-native/splash-screen';
+import {StatusBar} from '@ionic-native/status-bar';
 
-import { MyApp } from './app.component';
-import { HomePage } from '../pages/home/home';
-import { LoginPage } from '../pages/login/login';
-import { RegisterPage } from '../pages/register/register';
-import { GlobalsService } from '../providers/globals/globals';
+import {MyApp} from './app.component';
+import {HomePage} from '../pages/home/home';
+import {LoginPage} from '../pages/login/login';
+import {RegisterPage} from '../pages/register/register';
+import {AuthService} from '../providers/auth-service/auth-service';
 
-import { HistoricoPage } from '../pages/historico/historico';
-import { CochesEditPage } from '../pages/coches-edit/coches-edit';
-import { TabsInitPage } from '../pages/tabsInit/tabsInit';
-import { TabsConfigPage } from '../pages/tabsConfig/tabsConfig';
-import { JugadoresPage } from '../pages/jugadores/jugadores';
-import { JugadoresEditPage } from '../pages/jugadores-edit/jugadores-edit';
-import { AddRegistroPage } from '../pages/add-registro/add-registro';
+import {HistoricoPage} from '../pages/historico/historico';
+import {CochesEditPage} from '../pages/coches-edit/coches-edit';
+import {TabsInitPage} from '../pages/tabsInit/tabsInit';
+import {TabsConfigPage} from '../pages/tabsConfig/tabsConfig';
+import {JugadoresPage} from '../pages/jugadores/jugadores';
+import {JugadoresEditPage} from '../pages/jugadores-edit/jugadores-edit';
+import {AddRegistroPage} from '../pages/add-registro/add-registro';
 
-import { AuthProvider } from '../providers/auth/auth';
-import { FirebaseDbProvider } from '../providers/firebase-db/firebase-db';
+import {AuthProvider} from '../providers/auth/auth';
+import {FirebaseDbProvider} from '../providers/firebase-db/firebase-db';
 
-import { AngularFireModule } from 'angularfire2';
+import {AngularFireModule} from 'angularfire2';
 // for AngularFireDatabase
-import { AngularFireDatabaseModule } from 'angularfire2/database';
+import {AngularFireDatabaseModule} from 'angularfire2/database';
 //import { AngularFireDatabase } from 'angularfire2/database';
 //import { AngularFirestoreModule } from 'angularfire2/database';
 // for AngularFireAuth
-import { AngularFireAuthModule } from 'angularfire2/auth';
+import {AngularFireAuthModule} from 'angularfire2/auth';
 //import { AngularFireAuth } from 'angularfire2/auth';
 
 export const firebaseConfig = {
@@ -57,7 +57,7 @@ export const firebaseConfig = {
   imports: [
     BrowserModule,
     IonicModule.forRoot(MyApp),
-    AngularFireModule.initializeApp(firebaseConfig),                                       
+    AngularFireModule.initializeApp(firebaseConfig),
     AngularFireDatabaseModule,
     AngularFireAuthModule
   ],
@@ -79,9 +79,10 @@ export const firebaseConfig = {
     StatusBar,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
-    GlobalsService,
+    AuthService,
     AuthProvider,
     FirebaseDbProvider
   ]
 })
-export class AppModule {}
+export class AppModule {
+}

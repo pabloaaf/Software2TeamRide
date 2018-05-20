@@ -14,18 +14,18 @@ export class RegisterPage {
   registerCredentials = { email: '', password: '', team: '' }; //registerCredentials
   teams;
 
-  constructor(private nav: NavController, private auth: AuthProvider, private db:FirebaseDbProvider, private alertCtrl: AlertController) { 
+  constructor(private nav: NavController, private auth: AuthProvider, private db:FirebaseDbProvider, private alertCtrl: AlertController) {
     this.teams = [];
     this.db.getTeams().subscribe(equipos=>{
       for(var i = 0; i < equipos.length; i++){
-        this.teams.push(equipos[i].nombre);
+        //this.teams.push(equipos[i].nombre);
       }
     });
   }
- 
+
   public register() {
     let aux = 0;
-    for(var i = 0; i < this.teams.length; i++){        
+    for(var i = 0; i < this.teams.length; i++){
       if(this.registerCredentials.team === this.teams[i]){
         aux++;
       }
