@@ -1,26 +1,27 @@
 <ion-content padding>
-	<form #registerForm="jugForm"(ngSubmit)="saveData()">
-		<ion-list>
-			<ion-item>
-				<ion-icon name="person" item-start></ion-icon>
-				<ion-label stacked>Nombres:</ion-label>
-				<ion-input [(ngModel)] = "player.nombre" type="text" placeholder="Nombre" required></ion-input>
-			</ion-item>
-			<ion-item>
-				<ion-icon name="person" item-start></ion-icon>
-				<ion-label stacked>Apodo:</ion-label>
-				<ion-input [(ngModel)] = "player.apodo" type="text" placeholder="Apellidos"></ion-input>
-			</ion-item>
-			<ion-item>
-				<ion-icon name="people" item-start></ion-icon>
-				<ion-label stacked>Dorsal:</ion-label>
-				<ion-input [(ngModel)] = "player.dorsal" type="number" placeholder="numero de dorsal" required></ion-input>
-			</ion-item>
-		</ion-list>
-		<div padding>
-			<button ion-button block type="submit" [disabled]="!jugForm.valid">Guardar</button>
-		</div>
-	</form>
+  <form #registerFormPlayer="ngForm" (ngSubmit)="saveData()">
+    <ion-list>
+      <ion-item>
+        <ion-icon name="person" item-start></ion-icon>
+        <ion-label stacked>Nombres:</ion-label>
+        <ion-input type="text" placeholder="Nombre"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-icon name="person" item-start></ion-icon>
+        <ion-label stacked>Apodo:</ion-label>
+        <ion-input type="text" placeholder="Apellidos"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-icon name="mail" item-start></ion-icon>
+        <ion-label stacked>Dorsal:</ion-label>
+        <ion-input type="email" placeholder="Email"></ion-input>
+      </ion-item>
+
+    </ion-list>
+    <div padding>
+      <button ion-button block type="submit" [disabled]="!registerFormPlayer.form.valid">Guardar</button>
+    </div>
+  </form>
 </ion-content>
 
 <!--

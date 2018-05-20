@@ -1,6 +1,6 @@
-import { NgModule } from '@angular/core';
-import { IonicPageModule } from 'ionic-angular';
-import { AddRegistroPage } from './add-registro';
+import {NgModule} from '@angular/core';
+import {IonicPageModule} from 'ionic-angular';
+import {AddRegistroPage} from './add-registro';
 
 @NgModule({
   declarations: [
@@ -10,4 +10,5 @@ import { AddRegistroPage } from './add-registro';
     IonicPageModule.forChild(AddRegistroPage),
   ],
 })
-export class AddRegistroPageModule {}
+export class AddRegistroPageModule {
+}

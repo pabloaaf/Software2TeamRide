@@ -1,6 +1,7 @@
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import {Injectable} from '@angular/core';
+import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
+
 /*
   Generated class for the AuthServiceProvider provider.
 
@@ -10,7 +11,7 @@ import 'rxjs/add/operator/map';
 export class User {
   name: string;
   email: string;
- 
+
   constructor(name: string, email: string) {
     this.name = name;
     this.email = email;
@@ -20,7 +21,7 @@ export class User {
 @Injectable()
 export class AuthService {
   currentUser: User;
- 
+
   public login(credentials) {
     if (credentials.email === null || credentials.password === null) {
       return Observable.throw("Please insert credentials");
@@ -46,11 +47,11 @@ export class AuthService {
       });
     }
   }
- 
-  public getUserInfo() : User {
+
+  public getUserInfo(): User {
     return this.currentUser;
   }
- 
+
   public logout() {
     return Observable.create(observer => {
       this.currentUser = null;
