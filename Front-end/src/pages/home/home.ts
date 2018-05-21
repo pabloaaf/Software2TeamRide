@@ -16,8 +16,8 @@ export class HomePage {
 
   constructor(private auth: AuthProvider, private db: FirebaseDbProvider) {
     //let info = this.auth.getUserInfo();
-    this.email = this.auth.getUser().email;
-    this.team = this.db.getUserTeam(this.auth.getUser().uid);
+    //this.email = this.auth.getUser().email;
+    //this.team = this.db.getUserTeam(this.auth.getUser().uid);
   }
 
   public logout() {

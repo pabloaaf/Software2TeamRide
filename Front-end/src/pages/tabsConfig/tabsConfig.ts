@@ -15,7 +15,7 @@ export class TabsConfigPage {
   tab1Root = HomePage;
   tab2Root = JugadoresEditPage;
   tab3Root = CochesEditPage;
-
+  //añadir nuevo tab
   constructor(private nav: NavController) {
   }
 
