@@ -17,18 +17,19 @@ import {TabsConfigPage} from '../pages/tabsConfig/tabsConfig';
 import {JugadoresPage} from '../pages/jugadores/jugadores';
 import {JugadoresEditPage} from '../pages/jugadores-edit/jugadores-edit';
 import {AddRegistroPage} from '../pages/add-registro/add-registro';
+import {HistoricoJugPage} from '../pages/historico-jug/historico-jug';
+
 
 import {AuthProvider} from '../providers/auth/auth';
 import {FirebaseDbProvider} from '../providers/firebase-db/firebase-db';
 
 import {AngularFireModule} from 'angularfire2';
-// for AngularFireDatabase
 import {AngularFireDatabaseModule} from 'angularfire2/database';
-//import { AngularFireDatabase } from 'angularfire2/database';
-//import { AngularFirestoreModule } from 'angularfire2/database';
-// for AngularFireAuth
 import {AngularFireAuthModule} from 'angularfire2/auth';
-//import { AngularFireAuth } from 'angularfire2/auth';
+import { HttpProvider } from '../providers/http/http';
+import { GlobalsProvider } from '../providers/globals/globals';
+
+import { HttpClientModule } from '@angular/common/http';
 
 export const firebaseConfig = {
   apiKey: "AIzaSyCMWvRNwryUgVySCWoE3_oMgnmIcc7_7rY",
@@ -52,14 +53,16 @@ export const firebaseConfig = {
     TabsConfigPage,
     JugadoresPage,
     JugadoresEditPage,
-    AddRegistroPage
+    AddRegistroPage,
+    HistoricoJugPage
   ],
   imports: [
     BrowserModule,
     IonicModule.forRoot(MyApp),
     AngularFireModule.initializeApp(firebaseConfig),
     AngularFireDatabaseModule,
-    AngularFireAuthModule
+    AngularFireAuthModule,
+    HttpClientModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -73,7 +76,8 @@ export const firebaseConfig = {
     TabsConfigPage,
     JugadoresPage,
     JugadoresEditPage,
-    AddRegistroPage
+    AddRegistroPage,
+    HistoricoJugPage
   ],
   providers: [
     StatusBar,
@@ -81,7 +85,9 @@ export const firebaseConfig = {
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     AuthService,
     AuthProvider,
-    FirebaseDbProvider
+    FirebaseDbProvider,
+    HttpProvider,
+    GlobalsProvider
   ]
 })
 export class AppModule {

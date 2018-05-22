@@ -30,11 +30,13 @@ export class teams{
 export class players{
 	id: number;
 	//team: teams;
+	name: string;
 	teamId: string;
-	apodo: string;
+	team: string;
+	nick: string;
 	dorsal: number;
 	registrer:boolean;
-	correo: string;
+	email: string;
 	deuda : number;
 //pasw
 	

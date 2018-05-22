@@ -8,10 +8,14 @@
 
 
 <ion-content padding style="text-align:center" no-bounce>
-
-  <p>
-    <button ion-button (click)="showplayers()">siguiente</button>
-    <button class="button"></button>
-  </p>
-
+<form (ngSubmit)="showplayers()" #carsForm="ngForm">
+	<ion-label stacked>Escoge el coche para usar:</ion-label>
+	<ion-select placeholder="Select" [(ngModel)]="selected" name="algo"> 
+    <ion-option *ngFor="let item of players" value="{{item}}">{{item}}</ion-option>
+	</ion-select>`
+	    <button ion-button class="submit-btn" full type="submit" >Guardar coche.
+	    </button>
+</form>
 </ion-content>
+
+<!-- -->

@@ -1,6 +1,7 @@
 import {Component} from '@angular/core';
 import {NavController} from 'ionic-angular';
 
+import {HistoricoJugPage} from '../historico-jug/historico-jug';
 import { AuthProvider } from '../../providers/auth/auth';
 import { HttpProvider } from '../../providers/http/http';
 import {cars} from "../../providers/globals/globals";
@@ -10,10 +11,10 @@ import {players} from "../../providers/globals/globals";
   templateUrl: 'historico.html'
 })
 export class HistoricoPage {
-
+	
 	cars;
 	players;
-  constructor(public navCtrl: NavController,private http:HttpProvider) {
+  constructor(public nav: NavController,private http:HttpProvider) {
   	
   	//console.log(this.http.getNameUss());
   	this.cars = [];
@@ -28,13 +29,6 @@ export class HistoricoPage {
 
   public showplayers(){
   	console.log("peticion de jugadores.")
-  	this.players = [];
-  	this.http.getTeamID(this.http.getNameUss()).subscribe((teamId:number) =>{
-	  	this.http.getPlayNames(teamId).subscribe((play:players[])=>{
-	  		for(var i = 0; i < play.length; i++){
-	        	this.players.push(play[i].id);
-	      	}
-	  	});
-  	});
+  	this.nav.push(HistoricoJugPage);
   }// fin showplayers
 }
