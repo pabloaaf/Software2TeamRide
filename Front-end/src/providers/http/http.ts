@@ -58,5 +58,16 @@ export class HttpProvider {
 
      return this.http.get<players[]>(path + version + "/players/" + idTeam);
   }
+
+  public putPabellones(nombre:string){
+
+     return this.http.put<Pabellones>(path + version + "/PAVILIONS/", nombre);
+  }
+
+   public putPlayers(nombre:string,nick:string,dorsal:string){
+
+     return this.http.put(path + version + "/players/", nombre + nick + dorsal);
+   }
+
 }
 

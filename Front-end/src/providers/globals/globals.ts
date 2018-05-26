@@ -35,9 +35,9 @@ export class players{
 	team: string;
 	nick: string;
 	dorsal: number;
-	registrer:boolean;
 	email: string;
 	deuda : number;
+	//añadir pasword
 //pasw
 	
 }
@@ -47,6 +47,7 @@ export class cars{
 	ownerID: number;
 	owner:string;
 	teamID:number;
+	team:string;
 	spendingGas:number;
 	model:string;
 
@@ -59,4 +60,5 @@ export class Pabellones{
 	constructor(){
 	}
 
+//crear nueva clase, relacion entre pabellon y equipo
 }

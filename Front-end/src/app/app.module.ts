@@ -18,6 +18,7 @@ import {JugadoresPage} from '../pages/jugadores/jugadores';
 import {JugadoresEditPage} from '../pages/jugadores-edit/jugadores-edit';
 import {AddRegistroPage} from '../pages/add-registro/add-registro';
 import {HistoricoJugPage} from '../pages/historico-jug/historico-jug';
+import {PavEditPage} from '../pages/pav-edit/pav-edit';
 
 
 import {AuthProvider} from '../providers/auth/auth';
@@ -54,7 +55,8 @@ export const firebaseConfig = {
     JugadoresPage,
     JugadoresEditPage,
     AddRegistroPage,
-    HistoricoJugPage
+    HistoricoJugPage,
+    PavEditPage
   ],
   imports: [
     BrowserModule,
@@ -77,7 +79,8 @@ export const firebaseConfig = {
     JugadoresPage,
     JugadoresEditPage,
     AddRegistroPage,
-    HistoricoJugPage
+    HistoricoJugPage,
+    PavEditPage
   ],
   providers: [
     StatusBar,

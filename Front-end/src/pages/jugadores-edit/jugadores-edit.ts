@@ -1,6 +1,8 @@
 import {Component} from '@angular/core';
 import {IonicPage, NavController, NavParams} from 'ionic-angular';
 
+
+import { HttpProvider } from '../../providers/http/http';
 /**
  * Generated class for the JugadoresEditPage page.
  *
@@ -14,12 +16,13 @@ import {IonicPage, NavController, NavParams} from 'ionic-angular';
   templateUrl: 'jugadores-edit.html',
 })
 export class JugadoresEditPage {
-
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+	datosPla = { nombre: '', nick: '', dorsal: '' };
+  constructor(public navCtrl: NavController, public navParams: NavParams,public http:HttpProvider) {
   }
 
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad JugadoresEditPage');
+  public saveData(){
+  	console.log(this.datosPla.nombre + " " + this.datosPla.nick + " "+ this.datosPla.dorsal  + " ");
+  	this.http.putPlayers(this.datosPla.nombre,this.datosPla.nick,this.datosPla.dorsal);
   }
 
 }
