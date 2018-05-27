@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "module": "commonjs",
+    "outDir": "dist", //excluded files
+    "sourceMap": true
+  },
+  "include": [
+    "src/**/*.ts" //compilar a js toda la carpeta src
+                  //**/ recursively matches any subdirectory
+  ],
+  "exclude": [
+    "node_modules" //modulos descargados por  npm
+  ]
+}
