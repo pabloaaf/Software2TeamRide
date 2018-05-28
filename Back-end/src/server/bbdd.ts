@@ -25,9 +25,9 @@ class bbdd {
 
 	//+++++++++++++++  USUARIOS  ++++++++++++++++++
 
-	public login() {
+	public login(email:string) {
 		return new Promise((resolve, reject) => {
-			this.conexion.query(';', //cambiar
+			this.conexion.query(';', //ToDO
 				function (err, result) {
 					if (err) return reject(err);
 					resolve(result);
@@ -35,9 +35,29 @@ class bbdd {
 		});
 	}
 
-	public register() {
+	public checkRegisterPlayer(team:string, dorsal:number) {
 		return new Promise((resolve, reject) => {
-			this.conexion.query(';', //cambiar
+			this.conexion.query(';', //Todo
+				function (err, result) {
+					if (result == null || err) return reject(err); //devuelve que existe el jugador
+					resolve(result); //devuelve que se query resulto vacia
+				});
+		});
+	}
+
+	public register(email:string, password:string) {
+		return new Promise((resolve, reject) => {
+			this.conexion.query(';', //Todo
+				function (err, result) {
+					if (err) return reject(err);
+					resolve(result);
+				});
+		});
+	}
+
+	public registerNewPlayer(email:string, password:string, team:string, name:string, dorsal:number, nick:string) {
+		return new Promise((resolve, reject) => {
+			this.conexion.query(';', //Todo
 				function (err, result) {
 					if (err) return reject(err);
 					resolve(result);
@@ -49,7 +69,7 @@ class bbdd {
 
 	public infoTeams() {
 		return new Promise((resolve, reject) => {
-			this.conexion.query('SELECT * FROM teams;',
+			this.conexion.query('SELECT name FROM teams;', //devolver el nombre de todos los equipos
 				function (err, result) {
 					if (err) return reject(err);
 					resolve(result);
@@ -61,7 +81,7 @@ class bbdd {
 	public addTeam(name: string) {
 		console.log(name);
 		return new Promise((resolve, reject) => {
-			this.conexion.query('INSERT INTO teams (name) VALUES (\''+ name +'\');',
+			this.conexion.query('INSERT INTO teams (name) VALUES (\''+ name +'\');', //añade un nuevo team
 				(err, result) => {
 					if (err) reject(err);
 					resolve(result);
@@ -70,9 +90,9 @@ class bbdd {
 	}
 
 	//id
-	public infoTeam(id: number) {
+	public infoTeam(team: string) { //Devolver jugadores de ese equipo
 		return new Promise((resolve, reject) => {
-			this.conexion.query('SELECT * FROM teams WHERE name = \''+ id +'\';',
+			this.conexion.query('SELECT * FROM players WHERE team = \''+ team +'\';',
 				function (err, result) {
 					if (err) return reject(err);
 					resolve(result);
@@ -80,10 +100,10 @@ class bbdd {
 		});
 	}
 
-	//id + {name:'Cuatro Valles'}
-	public updateTeam(id: number, name: string) {
+	//id + {name:'Cuatro Valles'} 
+	public updateTeam(oldName: string, newName: string) {
 		return new Promise((resolve, reject) => {
-			this.conexion.query(';',
+			this.conexion.query('UPDATE teams SET name=\''+ newName +'\' WHERE name=\''+oldName+'\';',
 				function (err, result) {
 					if (err) return reject(err);
 					resolve(result);
@@ -91,9 +111,9 @@ class bbdd {
 		});
 	}
 
-	public deleteTeam(id: number) {
+	public deleteTeam(name: string) {//mejor con nombre 
 		return new Promise((resolve, reject) => {
-			this.conexion.query(';',
+			this.conexion.query('DELETE FROM teams WHERE id=\''+name+'\';',
 				function (err, result) {
 					if (err) return reject(err);
 					resolve(result);
@@ -103,9 +123,9 @@ class bbdd {
 
 	//+++++++++++++++  CARS  ++++++++++++++++++
 
-	public infoCars() {
-		return new Promise((resolve, reject) => {
-			this.conexion.query('SELECT * FROM cars;',
+	public infoCars(team:string) { //supongo que será sacar una lista de los coches de cierto equipo
+		return new Promise((resolve, reject) => { //ToDo
+			this.conexion.query('SELECT id, owner, model, seats FROM cars WHERE team=\''+team+'\';',
 				function (err, result) {
 					if (err) return reject(err);
 					resolve(result);
@@ -113,11 +133,10 @@ class bbdd {
 		});
 	}
 
-	//{name:'Cuatro Valles'}
-	public addCar(playerId: number, teamId: number, gas: string, model: string) {
+	public addCar(team: string, owner: string, ownerId: number, spendingGas: string, model: string, seats:number) {
 		console.log(name);
 		return new Promise((resolve, reject) => {
-			this.conexion.query('INSERT INTO cars (?) VALUES ?;',
+			this.conexion.query('INSERT INTO cars (team, owner, ownerId, spendingGas, model, seats) VALUES (\''+ team +'\', \''+ owner +'\', \''+ ownerId +'\', \''+ spendingGas +'\', \''+ model +'\', \''+seats+'\');',
 				(err, result) => {
 					if (err) reject(err);
 					resolve(result);
@@ -125,8 +144,7 @@ class bbdd {
 		});
 	}
 
-	//id
-	public infoCar(id: number) {
+	public infoCarId(id: number) { //Y aquí la información de un coche en concreto
 		return new Promise((resolve, reject) => {
 			this.conexion.query('SELECT * FROM cars WHERE id = \''+ id +'\';',
 				function (err, result) {
@@ -136,10 +154,9 @@ class bbdd {
 		});
 	}
 
-	//id + {name:'Cuatro Valles'}
-	public updateCar(id: number, playerId: number, name: string) {
+	public updateCarId(id: number, owner: string, ownerId: number, spendingGas:number) {//no sé
 		return new Promise((resolve, reject) => {
-			this.conexion.query(';',
+			this.conexion.query(';', //ToDo
 				function (err, result) {
 					if (err) return reject(err);
 					resolve(result);
@@ -147,9 +164,9 @@ class bbdd {
 		});
 	}
 
-	public deleteCar(id: number) {
+	public deleteCarId(id: number) {
 		return new Promise((resolve, reject) => {
-			this.conexion.query(';',
+			this.conexion.query('DELETE FROM cars WHERE id= \''+ id +'\';',
 				function (err, result) {
 					if (err) return reject(err);
 					resolve(result);
@@ -159,9 +176,9 @@ class bbdd {
 
 	//+++++++++++++++  PLAYERS  ++++++++++++++++++
 
-	public infoPlayers() {
+	public infoPlayers(team:string) {
 		return new Promise((resolve, reject) => {
-			this.conexion.query('SELECT * FROM players;',
+			this.conexion.query('SELECT * FROM players WHERE team= \''+team+'\';',
 				function (err, result) {
 					if (err) return reject(err);
 					resolve(result);
@@ -169,11 +186,30 @@ class bbdd {
 		});
 	}
 
-	//{name:'Cuatro Valles'}
-	public addPlayer(playerId: number, teamId: number, gas: string, model: string) {
+/*	public playerIDfromEmail(email:string) { //seleccionar el id de un jugador basándonos en su email
+		return new Promise((resolve, reject) => {
+			this.conexion.query('SELECT id FROM players WHERE email=\''+email+'\';',
+				function (err, result) {
+					if (err) return reject(err);
+					resolve(result);
+				});
+		});
+	}
+
+	public selectTeam(id:number) { //seleccionar equipo de un jugador
+		return new Promise((resolve, reject) => {
+			this.conexion.query('SELECT team FROM players WHERE id=\''+id+'\';',
+				function (err, result) {
+					if (err) return reject(err);
+					resolve(result);
+				});
+		});
+	}
+*/
+	public addPlayer(team: string, name: string, dorsal: number, nick: string) { //agregar un jugador, que no esta registrado
 		console.log(name);
 		return new Promise((resolve, reject) => {
-			this.conexion.query('INSERT INTO players (?) VALUES ?;',
+			this.conexion.query('INSERT INTO players (team, name, nick, debt) VALUES (\''+ team +'\', \''+ name +'\', \''+ nick +'\', \''+ debt +'\');',
 				(err, result) => {
 					if (err) reject(err);
 					resolve(result);
@@ -181,7 +217,6 @@ class bbdd {
 		});
 	}
 
-	//id
 	public infoPlayer(id: number) {
 		return new Promise((resolve, reject) => {
 			this.conexion.query('SELECT * FROM players WHERE id = \''+ id +'\';',
@@ -192,8 +227,7 @@ class bbdd {
 		});
 	}
 
-	//id + {name:'Cuatro Valles'}
-	public updatePlayer(id: number, playerId: number, name: string) {
+	public updatePlayer(id: number, name: string, dorsal: number, nick: string) {
 		return new Promise((resolve, reject) => {
 			this.conexion.query(';',
 				function (err, result) {
@@ -215,7 +249,7 @@ class bbdd {
 
 	//+++++++++++++++  PAVILIONS  ++++++++++++++++++
 
-	public infoPavilions() {
+	public infoPavilions(team: string) {
 		return new Promise((resolve, reject) => {
 			this.conexion.query('SELECT * FROM pavilions;',
 				function (err, result) {
@@ -225,8 +259,7 @@ class bbdd {
 		});
 	}
 
-	//{name:'Cuatro Valles'}
-	public addPavilion(playerId: number, teamId: number, gas: string, model: string) {
+	public addPavilion(team: string, pavilion: string, distance: number) {
 		console.log(name);
 		return new Promise((resolve, reject) => {
 			this.conexion.query('INSERT INTO pavilions (?) VALUES ?;',
@@ -237,19 +270,7 @@ class bbdd {
 		});
 	}
 
-	//id
-	public infoPavilion(id: number) {
-		return new Promise((resolve, reject) => {
-			this.conexion.query('SELECT * FROM pavilions WHERE id = \''+ id +'\';',
-				function (err, result) {
-					if (err) return reject(err);
-					resolve(result);
-				});
-		});
-	}
-
-	//id + {name:'Cuatro Valles'}
-	public updatePavilion(id: number, playerId: number, name: string) {
+	public updatePavilion(team: string, pavilion: string, distance: number) {
 		return new Promise((resolve, reject) => {
 			this.conexion.query(';',
 				function (err, result) {
@@ -259,7 +280,7 @@ class bbdd {
 		});
 	}
 
-	public deletePavilion(id: number) {
+	public deletePavilion(team: string, pavilion: string) {
 		return new Promise((resolve, reject) => {
 			this.conexion.query(';',
 				function (err, result) {

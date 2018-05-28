@@ -5,7 +5,13 @@ class BasicsController {
 
     constructor () {
     }
-
+        /*
+        /v0/teams  GET     Get all the teams.
+        /v0/teams  POST    Create a teams.
+        /v0/teams/:team_id     GET     Get a single team.
+        /v0/teams/:team_id     PUT     Update a team with new info.
+        /v0/teams/:team_id     DELETE  Delete a team. 
+        */
     // rutas Controller **********************************
     public contRoutes() {
         let router = express.Router();
@@ -16,61 +22,99 @@ class BasicsController {
 
         // teams
         router.route('/teams/')
-            .get(this.devolverTeams)
-            .post(this.actualizarTeams);
-
-        router.route('/teams/:team_id')
-            .get(this.devolverTeamId)
-            .put(this.actualizarTeamId)
-            .delete(this.borrarTeamId);
-        /*
-        /v0/teams  GET     Get all the teams.
-        /v0/teams  POST    Create a teams.
-        /v0/teams/:team_id     GET     Get a single team.
-        /v0/teams/:team_id     PUT     Update a team with new info.
-        /v0/teams/:team_id     DELETE  Delete a team. 
-        */
+            .get(this.infoTeams)
+            .post(this.addTeam)
+            .put(this.updateTeam)
+            .delete(this.deleteTeam);
 
         //cars
         router.route('/cars/')
-            .get(this.devolverCars)
-            .post(this.actualizarCars);
+            .get(this.infoCars)
+            .post(this.addCar);
 
         router.route('/cars/:cars_id')
-            .get(this.devolverTeamId)
-            .put(this.actualizarCarId)
-            .delete(this.borrarCarId);
-        
+            .get(this.infoCarId)
+            .put(this.updateCarId)
+            .delete(this.deleteCarId);
+
         //players
         router.route('/players/')
-            .get(this.devolverPlayers)
-            .post(this.actualizarPlayers);
+            .get(this.infoPlayers)
+            .post(this.addPlayer);
 
         router.route('/players/:players_id')
-            .get(this.devolverPlayerId)
-            .put(this.actualizarPlayerId)
-            .delete(this.borrarPlayerId);
+            .get(this.infoPlayerId)
+            .put(this.updatePlayerId)
+            .delete(this.deletePlayerId);
 
         //pavilions
         router.route('/pavilions/')
-            .get(this.devolverPavilions)
-            .post(this.actualizarPavilions);
+            .get(this.infoPavilions)
+            .post(this.addPavilionTeam)
+            .put(this.updatePavilion)
+            .delete(this.deletePavilion);
 
-        router.route('/pavilions/:pavilions_id')
-            .get(this.devolverPavilionId)
-            .put(this.actualizarPavilionId)
-            .delete(this.borrarPavilionId);
+        //cambiar deudas
+        router.route('/debt/:player_id')
+         	.put(updatePlayerDebtId);
 
         return router;
     }
 
     // funciones Controller **********************************
     private login (req, res, next) {
-        console.log('respuesta devolverTeamId');
-        bbdd.login()
+        console.log('respuesta login'); 
+        this.loginData(res.body.email, res.body.password);
+    }
+
+    private register (req, res, next) {
+        console.log('respuesta register');
+        //devolver jugador que se ha registrado y la cookie
+        bbdd.checkRegisterPlayer(res.body.team, res.body.dorsal)
         .then(
             value => {
-                res.send('Aqui se devolvera un token de loggeo');
+		        bbdd.register(res.body.email, res.body.password)
+		        .then(
+		            value => {
+		                this.loginData(res.body.email, res.body.password);
+		                //res.json({message:'Usuario registrado'});
+		                next();
+		            }
+		        ).catch(
+		            err => {
+		                console.log('err');
+		                res.send(err);
+		                res.status(404).end();
+		            }
+		        );
+        	}
+        ).catch(
+            err => {
+                bbdd.registerNewPlayer(res.body.email, res.body.password, res.body.team, req.body.name, req.body.dorsal, req.body.nick)
+		        .then(
+		            value => {
+		                this.loginData(res.body.email, res.body.password);
+		                //res.json({message:'Usuario registrado'});
+		                next();
+		            }
+		        ).catch(
+		            err => {
+		                console.log('err');
+		                res.send(err);
+		                res.status(404).end();
+		            }
+		        );
+            }
+        );
+    }
+
+    private loginData(email:string, password:string) {
+    	bbdd.login(email)
+        .then(
+            value => {
+            	//ToDo if de comprobar la contraseña
+            	//ToDo al hacer login devolver jugador que se ha registrado
+                res.send('Aqui se devolvera un cookie y el jugador completo de loggeo');
                 //bucle que busca si el usuario existe
                 //ToDo
                 next();
@@ -84,26 +128,9 @@ class BasicsController {
         );
     }
 
-    private register (req, res, next) {
-        console.log('respuesta devolverTeamId');
-        bbdd.register()
-        .then(
-            value => {
-                res.json('Usuario registrado');
-                next();
-            }
-        ).catch(
-            err => {
-                console.log('err');
-                res.send(err);
-                res.status(404).end();
-            }
-        );
-    }
-
     //+++++++++++++++++++  TEAM  ++++++++++++++++++
 
-    private devolverTeams (req, res, next) {
+    private infoTeams (req, res, next) { //devuelve la lista de teams
         console.log('respuesta devolverTeams');
         bbdd.infoTeams()
         .then(
@@ -120,7 +147,7 @@ class BasicsController {
         );
     }
 
-    private actualizarTeams (req, res, next) {
+    private addTeam (req, res, next) { //añade un nuevo team
         console.log('respuesta actualizarTeams');
         bbdd.addTeam(req.body.name)
         .then(
@@ -137,27 +164,10 @@ class BasicsController {
         );
     }
 
-    private devolverTeamId (req, res, next) {
-        console.log('respuesta devolverTeamId');
-        bbdd.infoTeam(req.params.id)
-        .then(
-            value => {
-                res.json(value);
-                next();
-            }
-        ).catch(
-            err => {
-                console.log('err');
-                res.send(err);
-                res.status(404).end();
-            }
-        );
-    }
-
-
-    private actualizarTeamId (req, res, next) {
+    private updateTeam (req, res, next) { //pasar nombre y un nombre nuevo para actualizarlo 
+    	//todo los jugadores del equipo lo actualizaran en cascada
         console.log('respuesta actualizarTeamId');
-        bbdd.updateTeam(req.params.id, req.body.name) //pasar id y un nombre nuevo
+        bbdd.updateTeam(req.body.name, req.body.newName)
         .then(
             value => {
                 res.json(value);
@@ -172,9 +182,10 @@ class BasicsController {
         );
     }
 
-    private borrarTeamId (req, res, next) {
+    private deleteTeam (req, res, next) { // pasa nombre y se borra
+    	//si el equipo tiene jugadores no se puede borrar
         console.log('respuesta borrarTeamId');
-        bbdd.deleteTeam(req.params.id)
+        bbdd.deleteTeam(req.body.name)
         .then(
             value => {
                 res.json(value);
@@ -191,9 +202,9 @@ class BasicsController {
 
     //+++++++++++++++++++ CAR ++++++++++++++++++++++
 
-    private devolverCars (req, res, next) {
-        console.log('respuesta devolverTeams');
-        bbdd.infoCars()
+    private infoCars (req, res, next) { //lista de coches pertenecientes a un equipo
+        console.log('respuesta infoCars');
+        bbdd.infoCars(req.body.team)
         .then(
             value => {
                 res.json(value);
@@ -208,9 +219,9 @@ class BasicsController {
         );
     }
 
-    private actualizarCars (req, res, next) {
-        console.log('respuesta actualizarTeams');
-        bbdd.addCar(req.body.playerId, req.body.teamId, req.body.gas, req.body.model)
+    private addCar (req, res, next) { //añadir coche a team
+        console.log('respuesta addCar');
+        bbdd.addCar(req.body.team, req.body.owner, req.body.ownerId, req.body.spendingGas, req.body.model, req.body.seats)
         .then(
             value => {
                 res.json(value);
@@ -225,9 +236,9 @@ class BasicsController {
         );
     }
 
-    private devolverCarId (req, res, next) {
-        console.log('respuesta devolverTeamId');
-        bbdd.infoCar(req.params.id)
+    private infoCarId (req, res, next) {
+        console.log('respuesta infoCarId');
+        bbdd.infoCarId(req.params.id)
         .then(
             value => {
                 res.json(value);
@@ -243,9 +254,9 @@ class BasicsController {
     }
 
 
-    private actualizarCarId (req, res, next) {
-        console.log('respuesta actualizarTeamId');
-        bbdd.updateCar(req.params.id, req.body.playerId, req.body.teamId, req.body.gas, req.body.model)
+    private updateCarId (req, res, next) {
+        console.log('respuesta updateCarId');
+        bbdd.updateCarId(req.params.id, req.body.owner, req.body.ownerId, req.body.spendingGas) //controlar que los tres parametros existan
         .then(
             value => {
                 res.json(value);
@@ -260,9 +271,9 @@ class BasicsController {
         );
     }
 
-    private borrarCarId (req, res, next) {
-        console.log('respuesta borrarTeamId');
-        bbdd.deleteCar(req.params.id)
+    private deleteCarId (req, res, next) {
+        console.log('respuesta deleteCarId');
+        bbdd.deleteCarId(req.params.id)
         .then(
             value => {
                 res.json(value);
@@ -279,9 +290,9 @@ class BasicsController {
 
     //+++++++++++++++++++  PLAYERS  ++++++++++++++++++
 
-    private devolverPlayers (req, res, next) {
-        console.log('respuesta devolverTeams');
-        bbdd.infoPlayers()
+    private infoPlayers (req, res, next) {
+        console.log('respuesta infoPlayers');
+        bbdd.infoPlayers(req.body.team)
         .then(
             value => {
                 res.json(value);
@@ -296,9 +307,9 @@ class BasicsController {
         );
     }
 
-    private actualizarPlayers (req, res, next) {
-        console.log('respuesta actualizarTeams');
-        bbdd.addPlayer(req.body.playerId, req.body.teamId, req.body.gas, req.body.model)
+    private addPlayer (req, res, next) {
+        console.log('respuesta addPlayer');
+        bbdd.addPlayer(req.body.team, req.body.name, req.body.dorsal, req.body.nick)//todo
         .then(
             value => {
                 res.json(value);
@@ -313,11 +324,12 @@ class BasicsController {
         );
     }
 
-    private devolverPlayerId (req, res, next) {
-        console.log('respuesta devolverTeamId');
+    private infoPlayerId (req, res, next) { //info un solo jugador
+        console.log('respuesta infoPlayerId');
         bbdd.infoPlayer(req.params.id)
         .then(
             value => {
+            	//por seguridad se comprueba que el jugador pertenezca al equipo que lo pide req.body.team
                 res.json(value);
                 next();
             }
@@ -330,10 +342,9 @@ class BasicsController {
         );
     }
 
-
-    private actualizarPlayerId (req, res, next) {
-        console.log('respuesta actualizarTeamId');
-        bbdd.updatePlayer(req.params.id, req.body.playerId, req.body.teamId, req.body.gas, req.body.model)
+    private updatePlayerId (req, res, next) {
+        console.log('respuesta updatePlayerId');
+        bbdd.updatePlayer(req.params.id, req.body.nombre, req.body.dorsal, req.body.nick)
         .then(
             value => {
                 res.json(value);
@@ -348,8 +359,14 @@ class BasicsController {
         );
     }
 
-    private borrarPlayerId (req, res, next) {
-        console.log('respuesta borrarTeamId');
+    private updatePlayerDebtId (req, res, next) {
+    	console.log('respuesta updatePlayerDebtId');
+    	//pasar por body req.body.newDebt
+    	res.status(404).end();
+    }
+
+    private deletePlayerId (req, res, next) {
+        console.log('respuesta deletePlayerId');
         bbdd.deletePlayer(req.params.id)
         .then(
             value => {
@@ -367,9 +384,9 @@ class BasicsController {
 
     //+++++++++++++++  PAVILIONS  ++++++++++++++++++
 
-    private devolverPavilions (req, res, next) {
-        console.log('respuesta devolverTeams');
-        bbdd.infoPavilions()
+    private infoPavilions (req, res, next) { //sacar todos los pabellones de un equipo
+        console.log('respuesta infoPavilions');
+        bbdd.infoPavilions(req.body.team)
         .then(
             value => {
                 res.json(value);
@@ -382,13 +399,11 @@ class BasicsController {
                 res.status(404).end();
             }
         );
-
-        //añadir teams_pav_rel aqui
     }
 
-    private actualizarPavilions (req, res, next) {
-        console.log('respuesta actualizarTeams');
-        bbdd.addPavilion(req.body.playerId, req.body.teamId, req.body.gas, req.body.model)
+    private addPavilionTeam (req, res, next) { //añadir un pabellon
+        console.log('respuesta addPavilionTeam');
+        bbdd.addPavilion(req.body.team, req.body.pavilion, req.body.distance)
         .then(
             value => {
                 res.json(value);
@@ -401,14 +416,11 @@ class BasicsController {
                 res.status(404).end();
             }
         );
-
-        //añadir teams_pav_rel aqui
-
     }
 
-    private devolverPavilionId (req, res, next) {
-        console.log('respuesta devolverTeamId');
-        bbdd.infoPavilion(req.params.id)
+    private updatePavilion (req, res, next) {
+        console.log('respuesta updatePavilion');
+        bbdd.updatePavilion(req.body.team, req.body.pavilion, req.body.distance)
         .then(
             value => {
                 res.json(value);
@@ -421,14 +433,11 @@ class BasicsController {
                 res.status(404).end();
             }
         );
-
-        //añadir teams_pav_rel aqui
     }
 
-
-    private actualizarPavilionId (req, res, next) {
-        console.log('respuesta actualizarTeamId');
-        bbdd.updatePavilion(req.params.id, req.body.playerId, req.body.teamId, req.body.gas, req.body.model)
+    private deletePavilion (req, res, next) {
+        console.log('respuesta deletePavilion');
+        bbdd.deletePavilion(req.body.team, req.body.pavilion)
         .then(
             value => {
                 res.json(value);
@@ -441,27 +450,6 @@ class BasicsController {
                 res.status(404).end();
             }
         );
-
-        //añadir teams_pav_rel aqui
-    }
-
-    private borrarPavilionId (req, res, next) {
-        console.log('respuesta borrarTeamId');
-        bbdd.deletePavilion(req.params.id)
-        .then(
-            value => {
-                res.json(value);
-                next();
-            }
-        ).catch(
-            err => {
-                console.log('err');
-                res.send(err);
-                res.status(404).end();
-            }
-        );
-
-        //añadir teams_pav_rel aqui
     }
 }
 
