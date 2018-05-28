@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 08-03-2018 a las 19:27:44
+-- Tiempo de generación: 06-05-2018 a las 16:03:00
 -- Versión del servidor: 10.1.21-MariaDB
 -- Versión de PHP: 5.6.30
 
@@ -19,6 +19,8 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `db_softwareii`
 --
+CREATE DATABASE IF NOT EXISTS `db_softwareii` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
+USE `db_softwareii`;
 
 -- --------------------------------------------------------
 
@@ -26,9 +28,10 @@ SET time_zone = "+00:00";
 -- Estructura de tabla para la tabla `cars`
 --
 
+DROP TABLE IF EXISTS `cars`;
 CREATE TABLE `cars` (
   `id` int(11) NOT NULL,
-  `ownerID` int(11) NOT NULL,
+  `ownerId` int(11) NOT NULL,
   `owner` varchar(50) NOT NULL,
   `team` varchar(50) NOT NULL, 
   `spendingGas` float NOT NULL,
@@ -36,15 +39,50 @@ CREATE TABLE `cars` (
   `seats` int(11) NOT NULL,
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- RELACIONES PARA LA TABLA `cars`:
+--
+
+--
+-- Truncar tablas antes de insertar `cars`
+--
+
+TRUNCATE TABLE `cars`;
+--
+-- Volcado de datos para la tabla `cars`
+--
+
+INSERT INTO `cars` (`id`, `ownerId`, `owner`, `spendingGas`, `model`) VALUES
+(1, 1, 'Pablo', 12, 'ferrary'),
+(2, 2, 'Dani', 5, 'Daewoo Matiz');
+
 -- --------------------------------------------------------
 
 --
 -- Estructura de tabla para la tabla `pavilions`
 --
 
+DROP TABLE IF EXISTS `pavilions`;
 CREATE TABLE `pavilions` (
   `name` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- RELACIONES PARA LA TABLA `pavilions`:
+--
+
+--
+-- Truncar tablas antes de insertar `pavilions`
+--
+
+TRUNCATE TABLE `pavilions`;
+--
+-- Volcado de datos para la tabla `pavilions`
+--
+
+INSERT INTO `pavilions` (`name`) VALUES
+('benito camela'),
+('tu casa');
 
 -- --------------------------------------------------------
 
@@ -52,6 +90,7 @@ CREATE TABLE `pavilions` (
 -- Estructura de tabla para la tabla `players`
 --
 
+DROP TABLE IF EXISTS `players`;
 CREATE TABLE `players` (
   `id` int(11) NOT NULL,
   `team` varchar(50) NOT NULL,
@@ -63,15 +102,50 @@ CREATE TABLE `players` (
   `password` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- RELACIONES PARA LA TABLA `players`:
+--
+
+--
+-- Truncar tablas antes de insertar `players`
+--
+
+TRUNCATE TABLE `players`;
+--
+-- Volcado de datos para la tabla `players`
+--
+
+INSERT INTO `players` (`id`, `team`, `name`, `email`, `nick`, `debt`) VALUES
+(1, 'Cuatro Valles', 'Pablo', 'pablo@yo.com', 'Pablo', 0),
+(2, 'Cuatro Valles', 'Daniel', 'dani@yo.com', 'Dani', 0);
+
 -- --------------------------------------------------------
 
 --
 -- Estructura de tabla para la tabla `teams`
 --
 
+DROP TABLE IF EXISTS `teams`;
 CREATE TABLE `teams` (
   `name` varchar(50) NOT NULL,
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- RELACIONES PARA LA TABLA `teams`:
+--
+
+--
+-- Truncar tablas antes de insertar `teams`
+--
+
+TRUNCATE TABLE `teams`;
+--
+-- Volcado de datos para la tabla `teams`
+--
+
+INSERT INTO `teams` (`name`) VALUES
+('Cuatro Valles'),
+('Delicias');
 
 -- --------------------------------------------------------
 
@@ -79,11 +153,28 @@ CREATE TABLE `teams` (
 -- Estructura de tabla para la tabla `teams_pav_rel`
 --
 
+DROP TABLE IF EXISTS `teams_pav_rel`;
 CREATE TABLE `teams_pav_rel` (
   `team` varchar(50) NOT NULL,
   `pavilion` varchar(50) NOT NULL,
   `distance` double NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- RELACIONES PARA LA TABLA `teams_pav_rel`:
+--
+
+--
+-- Truncar tablas antes de insertar `teams_pav_rel`
+--
+
+TRUNCATE TABLE `teams_pav_rel`;
+--
+-- Volcado de datos para la tabla `teams_pav_rel`
+--
+
+INSERT INTO `teams_pav_rel` (`team`, `pavilion`, `distance`) VALUES
+('Cuatro Valles', 'tu casa', 5);
 
 --
 -- Índices para tablas volcadas
@@ -127,7 +218,7 @@ ALTER TABLE `teams_pav_rel`
 -- AUTO_INCREMENT de la tabla `cars`
 --
 ALTER TABLE `cars`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT de la tabla `players`
 --
