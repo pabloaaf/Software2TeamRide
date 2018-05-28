@@ -77,7 +77,6 @@ class bbdd {
 		});
 	}
 
-	//{name:'Cuatro Valles'}
 	public addTeam(name: string) {
 		console.log(name);
 		return new Promise((resolve, reject) => {
@@ -89,7 +88,6 @@ class bbdd {
 		});
 	}
 
-	//id
 	public infoTeam(team: string) { //Devolver jugadores de ese equipo
 		return new Promise((resolve, reject) => {
 			this.conexion.query('SELECT * FROM players WHERE team = \''+ team +'\';',
@@ -100,7 +98,6 @@ class bbdd {
 		});
 	}
 
-	//id + {name:'Cuatro Valles'} 
 	public updateTeam(oldName: string, newName: string) {
 		return new Promise((resolve, reject) => {
 			this.conexion.query('UPDATE teams SET name=\''+ newName +'\' WHERE name=\''+oldName+'\';',
@@ -111,7 +108,7 @@ class bbdd {
 		});
 	}
 
-	public deleteTeam(name: string) {//mejor con nombre 
+	public deleteTeam(name: string) { 
 		return new Promise((resolve, reject) => {
 			this.conexion.query('DELETE FROM teams WHERE id=\''+name+'\';',
 				function (err, result) {
@@ -154,9 +151,9 @@ class bbdd {
 		});
 	}
 
-	public updateCarId(id: number, owner: string, ownerId: number, spendingGas:number) {//no sé
+	public updateCarId(id: number, owner: string, ownerId: number, spendingGas:number) {
 		return new Promise((resolve, reject) => {
-			this.conexion.query(';', //ToDo
+			this.conexion.query('UPDATE cars SET owner=\''+owner+'\', ownerId=\''+ownerId+'\'spendingGas=\''+spendingGas+'\' WHERE id = \''+id+'\';', 
 				function (err, result) {
 					if (err) return reject(err);
 					resolve(result);
@@ -209,7 +206,7 @@ class bbdd {
 	public addPlayer(team: string, name: string, dorsal: number, nick: string) { //agregar un jugador, que no esta registrado
 		console.log(name);
 		return new Promise((resolve, reject) => {
-			this.conexion.query('INSERT INTO players (team, name, nick, debt) VALUES (\''+ team +'\', \''+ name +'\', \''+ nick +'\', \''+ debt +'\');',
+			this.conexion.query('INSERT INTO players (team, name, nick, debt) VALUES (\''+ team +'\', \''+ name +'\', \''+ nick +'\', \'0\');',
 				(err, result) => {
 					if (err) reject(err);
 					resolve(result);
@@ -229,7 +226,7 @@ class bbdd {
 
 	public updatePlayer(id: number, name: string, dorsal: number, nick: string) {
 		return new Promise((resolve, reject) => {
-			this.conexion.query(';',
+			this.conexion.query('UPDATE players SET name=\''+name+'\', dorsal=\''+dorsal+'\'nick=\''+nick+'\' WHERE id = \''+id+'\';',
 				function (err, result) {
 					if (err) return reject(err);
 					resolve(result);
@@ -239,7 +236,7 @@ class bbdd {
 
 	public deletePlayer(id: number) {
 		return new Promise((resolve, reject) => {
-			this.conexion.query(';',
+			this.conexion.query('DELETE FROM players WHERE id= \''+ id +'\';',
 				function (err, result) {
 					if (err) return reject(err);
 					resolve(result);

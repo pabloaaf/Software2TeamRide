@@ -56,7 +56,7 @@ class BasicsController {
 
         //cambiar deudas
         router.route('/debt/:player_id')
-         	.put(updatePlayerDebtId);
+         	.put(this.updatePlayerDebtId);
 
         return router;
     }
@@ -114,16 +114,16 @@ class BasicsController {
             value => {
             	//ToDo if de comprobar la contraseña
             	//ToDo al hacer login devolver jugador que se ha registrado
-                res.send('Aqui se devolvera un cookie y el jugador completo de loggeo');
+                //res.send('Aqui se devolvera un cookie y el jugador completo de loggeo');
                 //bucle que busca si el usuario existe
                 //ToDo
-                next();
+                //next();
             }
         ).catch(
             err => {
                 console.log('err');
-                res.send('Usuario no encontrado');
-                res.status(404).end();
+                //res.send('Usuario no encontrado');
+                //res.status(404).end();
             }
         );
     }
@@ -309,7 +309,7 @@ class BasicsController {
 
     private addPlayer (req, res, next) {
         console.log('respuesta addPlayer');
-        bbdd.addPlayer(req.body.team, req.body.name, req.body.dorsal, req.body.nick)//todo
+        bbdd.addPlayer(req.body.team, req.body.name, req.body.dorsal, req.body.nick)
         .then(
             value => {
                 res.json(value);
@@ -359,7 +359,7 @@ class BasicsController {
         );
     }
 
-    private updatePlayerDebtId (req, res, next) {
+    private updatePlayerDebtId (req, res, next) { //ToDo
     	console.log('respuesta updatePlayerDebtId');
     	//pasar por body req.body.newDebt
     	res.status(404).end();
