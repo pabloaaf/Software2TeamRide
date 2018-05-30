@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 import { NavController, AlertController } from 'ionic-angular';
 //import { AuthService } from '../../providers/auth-service/auth-service';
 
-import { AuthProvider } from '../../providers/auth/auth';
-import { FirebaseDbProvider } from '../../providers/firebase-db/firebase-db';
+import {teams} from "../../providers/globals/globals";
+import { HttpProvider } from '../../providers/http/http';
 
 @Component({
   selector: 'page-register',
@@ -14,11 +14,12 @@ export class RegisterPage {
   registerCredentials = { email: '', password: '', team: '' }; //registerCredentials
   teams;
 
-  constructor(private nav: NavController, private auth: AuthProvider, private db:FirebaseDbProvider, private alertCtrl: AlertController) {
+  constructor(private nav: NavController, private http:HttpProvider, private alertCtrl: AlertController) {
     this.teams = [];
-    this.db.getTeams().subscribe(equipos=>{
+    this.http.getAllTeams().subscribe((equipos:teams[])=>{
+      console.log(equipos);
       for(var i = 0; i < equipos.length; i++){
-        //this.teams.push(equipos[i].nombre);
+        this.teams.push(equipos[i].name);
       }
     });
   }
@@ -31,15 +32,15 @@ export class RegisterPage {
       }
     }
     if(aux===0){
-      this.db.registerTeam(this.registerCredentials.team);
+      //this.db.registerTeam(this.registerCredentials.team);
     }
-    this.auth.registerUser(this.registerCredentials)
+    /*this.auth.registerUser(this.registerCredentials)
     .then((user) => {
-    	this.showPopup("Success", "Account created.");
+      this.showPopup("Success", "Account created.");
     })
     .catch(err=>{
-    	this.showPopup("Error", "Problem creating account.");
-    });
+      this.showPopup("Error", "Problem creating account.");
+    });*/
   }
 
   showPopup(title, text) {

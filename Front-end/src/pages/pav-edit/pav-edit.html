@@ -14,11 +14,21 @@
 
 
 <ion-content padding>
-	<form (ngSubmit)="putPav()" #pavForm="ngForm">
-              <ion-label stacked>Nombre:</ion-label>
-              <ion-input type="text" placeholder="nombre" name="nombre" [(ngModel)]="safePav"
-                         required></ion-input>
-         <button ion-button class="submit-btn" full type="submit" [disabled]="!pavForm.form.valid">Registrar pabellon </button>
-
+	<form #pavForm="ngForm" (ngSubmit)="putPav()">
+    <ion-list>
+      <ion-item>
+        <ion-icon name="person" item-start></ion-icon>
+        <ion-label stacked>Nombre:</ion-label>
+        <ion-input type="text" placeholder="Nombre" name="Nombre" [(ngModel)]="safePav.nombre" required></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-icon name="person" item-start></ion-icon>
+        <ion-label stacked>Distancia: (Decimales separados por .)</ion-label>
+        <ion-input type="number" step="any" placeholder="Distancia" name="Distancia" [(ngModel)]="safePav.distancia" required></ion-input>
+      </ion-item>
+    </ion-list>
+    <div padding>
+      <button ion-button block type="submit" [disabled]="!pavForm.form.valid">Registrar pabellon</button>
+    </div>
 	</form>
 </ion-content>

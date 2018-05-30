@@ -16,14 +16,14 @@ import { HttpProvider } from '../../providers/http/http';
 })
 export class PavEditPage {
 
-	safePav = ''; //donde se guarda el nombre del pabellon
+	safePav = { nombre: '', distancia: 0}; //donde se guarda el nombre del pabellon
   constructor(public navCtrl: NavController, public navParams: NavParams,public http:HttpProvider) {
   }
 
   public putPav(){
 
-  	console.log("entra, nombre del pabellon " + this.safePav);
-  	this.http.putPabellones(this.safePav);
+  	console.log("entra, nombre del pabellon " + this.safePav.nombre + " distancia: " + this.safePav.distancia);
+  	this.http.putPabellones(this.safePav.nombre, this.safePav.distancia);
   }
 
 }

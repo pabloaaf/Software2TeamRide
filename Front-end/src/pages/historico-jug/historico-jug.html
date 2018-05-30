@@ -7,7 +7,7 @@
 
 <ion-header>
 
-  <<ion-navbar>
+  <ion-navbar>
     <ion-title>historicoJug</ion-title>
   </ion-navbar>
 
@@ -19,8 +19,8 @@
 	<ion-label stacked>Selecciona los jugadores para el coche:</ion-label>
 	<ion-select [(ngModel)]="jugadoresSelec" multiple="true" name="algo">
     <ion-option *ngFor="let item of players" value="{{item}}">{{item}}</ion-option>
-	</ion-select>`
-	   	<button ion-button class="submit-btn" full type="submit" >Guardar jugadores. 
+	</ion-select>
+	   	<button ion-button class="submit-btn" full type="submit" >Guardar jugadores
 	   	</button>
 
 </form>

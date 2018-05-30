@@ -1,4 +1,6 @@
 import {Component} from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import {IonicPage, NavController, NavParams} from 'ionic-angular';
 
 
@@ -17,11 +19,11 @@ import { HttpProvider } from '../../providers/http/http';
 })
 export class JugadoresEditPage {
 	datosPla = { nombre: '', nick: '', dorsal: '' };
-  constructor(public navCtrl: NavController, public navParams: NavParams,public http:HttpProvider) {
+  constructor(public navCtrl: NavController, public navParams: NavParams,public http:HttpProvider, public httpclient:HttpClient) {
   }
 
   public saveData(){
-  	console.log(this.datosPla.nombre + " " + this.datosPla.nick + " "+ this.datosPla.dorsal  + " ");
+  	//console.log(this.datosPla.nombre + " " + this.datosPla.nick + " "+ this.datosPla.dorsal  + " ");
   	this.http.putPlayers(this.datosPla.nombre,this.datosPla.nick,this.datosPla.dorsal);
   }
 

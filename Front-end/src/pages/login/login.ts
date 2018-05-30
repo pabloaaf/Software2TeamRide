@@ -5,7 +5,7 @@ import {RegisterPage} from '../register/register';
 import {TabsInitPage} from '../tabsInit/tabsInit';
 
 import { HttpProvider } from '../../providers/http/http';
-import {AuthProvider} from '../../providers/auth/auth';
+//import {AuthProvider} from '../../providers/auth/auth';
 
 /**
  * Generated class for the LoginPage page.
@@ -21,7 +21,7 @@ import {AuthProvider} from '../../providers/auth/auth';
 export class LoginPage { //la clase es la que se llama en el app para ser ejecutao al iniciar ionic serve
   loading: Loading;
   registerCredentials = {email: '', password: ''}; //registerCredentials
-  constructor(private nav: NavController, private auth: AuthProvider, private alertCtrl: AlertController, private loadingCtrl: LoadingController, private http:HttpProvider) {
+  constructor(private nav: NavController, private alertCtrl: AlertController, private loadingCtrl: LoadingController, private http:HttpProvider) {
   } //AuthService
 
 

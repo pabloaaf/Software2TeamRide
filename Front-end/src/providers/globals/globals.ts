@@ -31,14 +31,14 @@ export class players{
 	id: number;
 	//team: teams;
 	name: string;
-	teamId: string;
+	//teamId: string;
 	team: string;
 	nick: string;
 	dorsal: number;
 	email: string;
 	deuda : number;
 	//añadir pasword
-//pasw
+	pasw: string;
 	
 }
 
@@ -46,14 +46,14 @@ export class cars{
 	id:number;
 	ownerID: number;
 	owner:string;
-	teamID:number;
 	team:string;
 	spendingGas:number;
 	model:string;
+	seats: number;
 
 
 }
-export class Pabellones{
+export class pavilions{
 	distance:number;
 	name:string;
 
@@ -61,4 +61,11 @@ export class Pabellones{
 	}
 
 //crear nueva clase, relacion entre pabellon y equipo
+}
+export class pavteam{
+
+	team: string;
+	pavilion: string;
+	distance: number;
+
 }

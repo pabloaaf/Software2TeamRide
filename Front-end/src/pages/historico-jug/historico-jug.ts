@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
-import {HistoricoPage} from '../historico/historico';
+import {AddRegistroPage} from '../add-registro/add-registro';
 import { HttpProvider } from '../../providers/http/http';
 import {players} from "../../providers/globals/globals";
 import { AlertController } from 'ionic-angular';

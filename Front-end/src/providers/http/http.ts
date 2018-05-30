@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import {teams, players, cars, Pabellones} from "../globals/globals"
+import {teams, players, cars, pavilions} from "../globals/globals"
 import {Observable} from 'rxjs/Observable';
 /*
   Generated class for the HttpProvider provider.
@@ -16,6 +16,7 @@ const version = "v0";
 @Injectable()
 export class HttpProvider {
 	//variables
+  data: Observable<any>;
   private nombreUss:string;
   private teamId:number;
   constructor(public http: HttpClient) {
@@ -59,14 +60,28 @@ export class HttpProvider {
      return this.http.get<players[]>(path + version + "/players/" + idTeam);
   }
 
-  public putPabellones(nombre:string){
-
-     return this.http.put<Pabellones>(path + version + "/PAVILIONS/", nombre);
+  public putPabellones(nombre:string, distancia:number){
+    const body = JSON.stringify({team:"cuatro valles",pavilion: nombre, distance: Number(distancia)});
+    const options = {headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    }};
+    console.log(body);
+    return this.http.post(path + version + "/pavilions/", body, options);
   }
 
    public putPlayers(nombre:string,nick:string,dorsal:string){
-
-     return this.http.put(path + version + "/players/", nombre + nick + dorsal);
+    let postdata = new FormData();
+    postdata.append('name','nick','dorsal');
+    postdata.append(nombre,nick,dorsal);
+    this.http.post(path + version + "/players/",{
+      name:nombre,
+      nick:nick,
+      dorsal:dorsal
+      }).subscribe(
+      (data:any) =>{
+        console.log(data);
+      });
+    
    }
 
 }
