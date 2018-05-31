@@ -31,7 +31,7 @@ export class LoginPage { //la clase es la que se llama en el app para ser ejecut
 
   public login() {
     this.showLoading()
-    this.nav.setRoot(TabsInitPage);
+    this.nav.setRoot(TabsInitPage); //probar push
     console.log(this.registerCredentials.email);
     this.http.setNameUss(this.registerCredentials.email);
     /*this.auth.loginUser(this.registerCredentials.email, this.registerCredentials.password)

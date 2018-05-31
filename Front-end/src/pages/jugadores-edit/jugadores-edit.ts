@@ -1,7 +1,9 @@
 import {Component} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import {IonicPage, NavController, NavParams} from 'ionic-angular';
+import { NavController, NavParams} from 'ionic-angular';
+import {players} from "../../providers/globals/globals";
+import {NewPlayerPage} from '../new-player/new-player';
 
 
 import { HttpProvider } from '../../providers/http/http';
@@ -12,19 +14,27 @@ import { HttpProvider } from '../../providers/http/http';
  * Ionic pages and navigation.
  */
 
-@IonicPage()
+
 @Component({
   selector: 'page-jugadores-edit',
   templateUrl: 'jugadores-edit.html',
 })
 export class JugadoresEditPage {
-	datosPla = { nombre: '', nick: '', dorsal: '' };
-  constructor(public navCtrl: NavController, public navParams: NavParams,public http:HttpProvider, public httpclient:HttpClient) {
+	public jugadorVacio:players;
+	public players:players[];
+  constructor(public nav: NavController, public navParams: NavParams,public http:HttpProvider, public httpclient:HttpClient) {
+  	this.jugadorVacio = new players(); 
+  	 this.http.getPlayers().subscribe((play:players[])=>{
+	    this.players = play;
+	    console.log(play);
+	});
   }
 
-  public saveData(){
-  	//console.log(this.datosPla.nombre + " " + this.datosPla.nick + " "+ this.datosPla.dorsal  + " ");
-  	this.http.putPlayers(this.datosPla.nombre,this.datosPla.nick,this.datosPla.dorsal);
-  }
+
+  public nuevoJugador(){
+    console.log("peticion de jugadores.")
+    this.nav.push(NewPlayerPage,this.jugadorVacio);
+  }// fi
+
 
 }

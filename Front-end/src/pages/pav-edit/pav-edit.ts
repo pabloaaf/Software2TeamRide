@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams } from 'ionic-angular';
 
 import { HttpProvider } from '../../providers/http/http';
 /**
@@ -9,7 +9,7 @@ import { HttpProvider } from '../../providers/http/http';
  * Ionic pages and navigation.
  */
 
-@IonicPage()
+
 @Component({
   selector: 'page-pav-edit',
   templateUrl: 'pav-edit.html',
@@ -21,9 +21,12 @@ export class PavEditPage {
   }
 
   public putPav(){
-
   	console.log("entra, nombre del pabellon " + this.safePav.nombre + " distancia: " + this.safePav.distancia);
-  	this.http.putPabellones(this.safePav.nombre, this.safePav.distancia);
+  	this.http.postPabellones(this.safePav.nombre, this.safePav.distancia).subscribe(data => {
+      console.log(data);
+    }, error => {
+      console.log(error);
+    });;
   }
 
 }

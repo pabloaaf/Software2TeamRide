@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {IonicPage, NavController, NavParams} from 'ionic-angular';
+import { NavController, NavParams} from 'ionic-angular';
 
 import {HistoricoJugPage} from '../historico-jug/historico-jug';
 //import { AuthProvider } from '../../providers/auth/auth';
@@ -14,7 +14,6 @@ import {players} from "../../providers/globals/globals";
  * Ionic pages and navigation.
  */
 
-@IonicPage()
 @Component({
   selector: 'page-add-registro',
   templateUrl: 'add-registro.html',
@@ -27,13 +26,11 @@ export class AddRegistroPage {
     
     //console.log(this.http.getNameUss());
     this.cars = [];
-    this.http.getTeamID(this.http.getNameUss()).subscribe((teamId:number) =>{
-      this.http.getCarList(teamId).subscribe((coches:cars[])=>{
+    this.http.getCarList().subscribe((coches:cars[])=>{
         for(var i = 0; i < coches.length; i++){
             this.cars.push(coches[i].id);
           }
       });
-    });
   }//fin constructor
 
   public showplayers(){

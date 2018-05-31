@@ -1,9 +1,29 @@
 <ion-content>
-  <ion-list>
-    <ion-list-header>Editar coches</ion-list-header>
-    <ion-item>
-      <ion-icon name="ionic" item-start></ion-icon>
-      @ionicframework
-    </ion-item>
-  </ion-list>
+  <form #carForm="ngForm" (ngSubmit)="addNewCar()">
+    <ion-list>
+      <ion-item>
+        <ion-icon name="person" item-start></ion-icon>
+        <ion-label stacked>Dueno:</ion-label>
+        <ion-input type="text" placeholder="Dueno" name="Dueno" [(ngModel)]="datosCoches.dueno" required></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-icon name="Gas" item-start></ion-icon>
+        <ion-label stacked>Litros a los 100: (Decimales separados por .)</ion-label>
+        <ion-input type="number" step="any" placeholder="Litros" name="Litros" [(ngModel)]="datosCoches.gasGastado" required></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-icon name="person" item-start></ion-icon>
+        <ion-label stacked>Modelo:</ion-label>
+        <ion-input type="text" placeholder="modelo" name="modelo" [(ngModel)]="datosCoches.modelo" required></ion-input>
+      </ion-item>
+       <ion-item>
+        <ion-icon name="person" item-start></ion-icon>
+        <ion-label stacked>Asientos: (Decimales separados por .)</ion-label>
+        <ion-input type="number" step="any" placeholder="asientos" name="asientos" [(ngModel)]="datosCoches.asientos" required></ion-input>
+      </ion-item>
+    </ion-list>
+    <div padding>
+      <button ion-button block type="submit" [disabled]="!carForm.form.valid">Añadir coche.</button>
+    </div>
+	</form>
 </ion-content>

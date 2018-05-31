@@ -39,7 +39,9 @@ export class players{
 	deuda : number;
 	//añadir pasword
 	pasw: string;
-	
+	constructor(){
+		this.id = 0;
+	}
 }
 
 export class cars{

@@ -17,11 +17,14 @@ import {JugadoresEditPage} from '../pages/jugadores-edit/jugadores-edit';
 import {AddRegistroPage} from '../pages/add-registro/add-registro';
 import {HistoricoJugPage} from '../pages/historico-jug/historico-jug';
 import {PavEditPage} from '../pages/pav-edit/pav-edit';
+import {PavDestPage} from '../pages/pav-dest/pav-dest';
+import {NewPlayerPage} from '../pages/new-player/new-player';
 
 import { HttpProvider } from '../providers/http/http';
 import { GlobalsProvider } from '../providers/globals/globals';
 
 import { HttpClientModule } from '@angular/common/http';
+
 
 @NgModule({
   declarations: [
@@ -37,12 +40,14 @@ import { HttpClientModule } from '@angular/common/http';
     JugadoresEditPage,
     AddRegistroPage,
     HistoricoJugPage,
-    PavEditPage
+    PavEditPage,
+    PavDestPage,
+    NewPlayerPage
   ],
   imports: [
     BrowserModule,
-    IonicModule.forRoot(MyApp),
-    HttpClientModule
+    HttpClientModule,
+    IonicModule.forRoot(MyApp)
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -58,7 +63,10 @@ import { HttpClientModule } from '@angular/common/http';
     JugadoresEditPage,
     AddRegistroPage,
     HistoricoJugPage,
-    PavEditPage
+    PavEditPage,
+    PavDestPage,
+    NewPlayerPage
+
   ],
   providers: [
     StatusBar,

@@ -22,6 +22,11 @@ export class RegisterPage {
         this.teams.push(equipos[i].name);
       }
     });
+    /*this.http.newTeam("prueba").subscribe(data => {
+      console.log(data);
+    }, error => {
+      console.log(error);
+    });*/
   }
 
   public register() {

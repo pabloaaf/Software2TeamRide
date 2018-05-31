@@ -14,7 +14,25 @@
 
 
 <ion-content padding>
-  <ion-card>
+
+<ion-card *ngFor="let player of players">
+    <ion-item>
+      <ion-icon name="football" item-start large></ion-icon> <!-- mostrar deuda y dorsal-->
+      <h2>{{player.id}}</h2>
+      <p>{{player.name}}</p>
+      <p>{{player.dorsal}}</p>
+      <p>{{player.deuda}}</p>
+    </ion-item>
+</ion-card>
+
+<!--<form #safeForm="ngForm">
+  <ion-label stacked>Los jugadores:</ion-label>
+  <ion-select [(ngModel)]="jugadoresSelec" multiple="true" name="algo">
+    <ion-option *ngFor="let item of players" value="{{item.id}}">{{item.name}}</ion-option>
+  </ion-select>
+</form>-->
+
+  <!--<ion-card>
     <ion-item>
       <ion-icon name="football" item-start large></ion-icon>
       <h2>Museum of Football</h2>
@@ -35,5 +53,5 @@
       </button>
     </ion-item>
 
-  </ion-card>
+  </ion-card>-->
 </ion-content>

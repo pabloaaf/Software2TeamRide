@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams } from 'ionic-angular';
 
 import {AddRegistroPage} from '../add-registro/add-registro';
 import { HttpProvider } from '../../providers/http/http';
 import {players} from "../../providers/globals/globals";
 import { AlertController } from 'ionic-angular';
+import {PavDestPage} from '../pav-dest/pav-dest';
 /**
  * Generated class for the HistoricoJugPage page.
  *
@@ -12,25 +13,22 @@ import { AlertController } from 'ionic-angular';
  * Ionic pages and navigation.
  */
 
-@IonicPage()
+
 @Component({
   selector: 'page-historico-jug',
   templateUrl: 'historico-jug.html',
 })
 export class HistoricoJugPage {
-	players;
-	jugadoresSelec;
+  public players:players[];
+	public jugadoresSelec:number[];
   constructor(public nav: NavController, public navParams: NavParams,private http:HttpProvider,private alert: AlertController) {
   	this.players = [];
   	this.jugadoresSelec = null;
-  	this.http.getTeamID(this.http.getNameUss()).subscribe((teamId:number) =>{
-	  	this.http.getPlayNames(teamId).subscribe((play:players[])=>{
-	  		for(var i = 0; i < play.length; i++){
-	        	this.players.push(play[i].nick);
-	        	console.log(play[i].nick);
-	      	}
-	  	});
-  	});
+  	
+    this.http.getPlayers().subscribe((play:players[])=>{
+      this.players = play;
+      console.log(play);
+    });
   }
 
 
@@ -46,7 +44,7 @@ export class HistoricoJugPage {
   	}
   	else if(this.jugadoresSelec.length<6){
   		//Saltar a la pagina de elegir pabellones.
-  		console.log("enviaria el coche a la base de datos");
+  		 this.nav.push(PavDestPage); 
   	}
   	else if(this.jugadoresSelec.length>6){
   		let alert = this.alert.create({
