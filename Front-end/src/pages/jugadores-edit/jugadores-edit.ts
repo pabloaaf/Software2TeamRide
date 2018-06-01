@@ -1,6 +1,12 @@
 import {Component} from '@angular/core';
-import {IonicPage, NavController, NavParams} from 'ionic-angular';
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { NavController, NavParams} from 'ionic-angular';
+import {players} from "../../providers/globals/globals";
+import {NewPlayerPage} from '../new-player/new-player';
 
+
+import { HttpProvider } from '../../providers/http/http';
 /**
  * Generated class for the JugadoresEditPage page.
  *
@@ -8,18 +14,27 @@ import {IonicPage, NavController, NavParams} from 'ionic-angular';
  * Ionic pages and navigation.
  */
 
-@IonicPage()
+
 @Component({
   selector: 'page-jugadores-edit',
   templateUrl: 'jugadores-edit.html',
 })
 export class JugadoresEditPage {
-
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+	public jugadorVacio:players;
+	public players:players[];
+  constructor(public nav: NavController, public navParams: NavParams,public http:HttpProvider, public httpclient:HttpClient) {
+  	this.jugadorVacio = new players(); 
+  	 this.http.getPlayers().subscribe((play:players[])=>{
+	    this.players = play;
+	    console.log(play);
+	});
   }
 
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad JugadoresEditPage');
-  }
+
+  public nuevoJugador(){
+    console.log("peticion de jugadores.")
+    this.nav.push(NewPlayerPage,this.jugadorVacio);
+  }// fi
+
 
 }

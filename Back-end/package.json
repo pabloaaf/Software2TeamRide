@@ -1,0 +1,33 @@
+{
+  "name": "protobase",
+  "version": "1.0.0",
+  "description": "prueba de concepto",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "tsc && node dist/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "none"
+  },
+  "keywords": [
+    "prueba",
+    "nodejs",
+    "typescript"
+  ],
+  "author": "P",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "cors": "^2.8.4",
+    "express": "4.16.2",
+    "mysql": "^2.15.0",
+    "typescript": "^2.7.1"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.4",
+    "@types/node": "^9.4.0",
+    "@types/typescript": "^2.0.0"
+  }
+}

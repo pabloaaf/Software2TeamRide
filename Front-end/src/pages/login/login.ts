@@ -4,7 +4,8 @@ import {NavController, AlertController, LoadingController, Loading} from 'ionic-
 import {RegisterPage} from '../register/register';
 import {TabsInitPage} from '../tabsInit/tabsInit';
 
-import {AuthProvider} from '../../providers/auth/auth';
+import { HttpProvider } from '../../providers/http/http';
+//import {AuthProvider} from '../../providers/auth/auth';
 
 /**
  * Generated class for the LoginPage page.
@@ -17,12 +18,12 @@ import {AuthProvider} from '../../providers/auth/auth';
   selector: 'page-login',
   templateUrl: 'login.html',
 })
-export class LoginPage {
+export class LoginPage { //la clase es la que se llama en el app para ser ejecutao al iniciar ionic serve
   loading: Loading;
   registerCredentials = {email: '', password: ''}; //registerCredentials
-
-  constructor(private nav: NavController, private auth: AuthProvider, private alertCtrl: AlertController, private loadingCtrl: LoadingController) {
+  constructor(private nav: NavController, private alertCtrl: AlertController, private loadingCtrl: LoadingController, private http:HttpProvider) {
   } //AuthService
+
 
   public createAccount() {
     this.nav.push(RegisterPage);
@@ -30,13 +31,16 @@ export class LoginPage {
 
   public login() {
     this.showLoading()
-    this.auth.loginUser(this.registerCredentials.email, this.registerCredentials.password)
+    this.nav.setRoot(TabsInitPage); //probar push
+    console.log(this.registerCredentials.email);
+    this.http.setNameUss(this.registerCredentials.email);
+    /*this.auth.loginUser(this.registerCredentials.email, this.registerCredentials.password)
       .then((user) => {
         this.nav.setRoot(TabsInitPage);
       })
       .catch(err => {
         this.showError("Acceso Denegado");
-      })
+      })*/
   }
 
   /*   this.auth.login(this.registerCredentials).subscribe(allowed => {

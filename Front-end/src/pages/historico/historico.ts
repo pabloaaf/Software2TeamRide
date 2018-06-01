@@ -6,9 +6,9 @@ import {NavController} from 'ionic-angular';
   templateUrl: 'historico.html'
 })
 export class HistoricoPage {
-
-  constructor(public navCtrl: NavController) {
-
-  }
-
+	
+	
+  constructor(public nav: NavController) {}
+  	
+  	
 }

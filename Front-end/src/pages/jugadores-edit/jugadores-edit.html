@@ -1,29 +1,15 @@
 <ion-content padding>
-  <form #registerFormPlayer="ngForm" (ngSubmit)="saveData()">
-    <ion-list>
-      <ion-item>
-        <ion-icon name="person" item-start></ion-icon>
-        <ion-label stacked>Nombres:</ion-label>
-        <ion-input type="text" placeholder="Nombre"></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-icon name="person" item-start></ion-icon>
-        <ion-label stacked>Apodo:</ion-label>
-        <ion-input type="text" placeholder="Apellidos"></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-icon name="mail" item-start></ion-icon>
-        <ion-label stacked>Dorsal:</ion-label>
-        <ion-input type="email" placeholder="Email"></ion-input>
-      </ion-item>
-
-    </ion-list>
-    <div padding>
-      <button ion-button block type="submit" [disabled]="!registerFormPlayer.form.valid">Guardar</button>
-    </div>
-  </form>
+<button ion-button block (click)="nuevoJugador()"> New player</button>
+<ion-card *ngFor="let player of players">
+    <ion-item>
+      <ion-icon name="football" item-start large></ion-icon> <!-- mostrar deuda y dorsal-->
+      <h2>{{player.id}}</h2>
+      <p>{{player.name}}</p>
+      <p>{{player.dorsal}}</p>
+      <p>{{player.deuda}}</p>
+    </ion-item>
+</ion-card>
 </ion-content>
-
 <!--
 <mbsc-card [options]="settings">
 <mbsc-card-header>

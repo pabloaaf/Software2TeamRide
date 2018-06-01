@@ -1,5 +1,8 @@
 import {Component} from '@angular/core';
-import {IonicPage, NavController, NavParams} from 'ionic-angular';
+import { NavController, NavParams} from 'ionic-angular';
+
+import {players} from "../../providers/globals/globals";
+import { HttpProvider } from '../../providers/http/http';
 
 /**
  * Generated class for the JugadoresPage page.
@@ -8,14 +11,19 @@ import {IonicPage, NavController, NavParams} from 'ionic-angular';
  * Ionic pages and navigation.
  */
 
-@IonicPage()
+
 @Component({
   selector: 'page-jugadores',
   templateUrl: 'jugadores.html',
 })
 export class JugadoresPage {
-
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+	public players:players[];
+	//mostrar lista de jugadores con: nombre, nick, deuda, dorsal
+  constructor(public navCtrl: NavController, public navParams: NavParams, public http:HttpProvider) {
+  	this.http.getPlayers().subscribe((play:players[])=>{
+	    this.players = play;
+	    console.log(play);
+		});
   }
 
   ionViewDidLoad() {
