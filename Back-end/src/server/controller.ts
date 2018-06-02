@@ -28,29 +28,29 @@ class BasicsController {
             .delete(this.deleteTeam);
 
         //cars
-        router.route('/cars/')
+        router.route('/cars/:team_name')
             .get(this.infoCars)
             .post(this.addCar);
 
         router.route('/cars/:cars_id')
-            .get(this.infoCarId)
             .put(this.updateCarId)
             .delete(this.deleteCarId);
 
         //players
-        router.route('/players/')
+        router.route('/players/:team_name')
             .get(this.infoPlayers)
             .post(this.addPlayer);
 
         router.route('/players/:players_id')
-            .get(this.infoPlayerId)
             .put(this.updatePlayerId)
             .delete(this.deletePlayerId);
 
         //pavilions
-        router.route('/pavilions/')
+        router.route('/pavilions/:team_name')
             .get(this.infoPavilions)
-            .post(this.addPavilionTeam)
+            .post(this.addPavilionTeam);
+            
+        router.route('/pavilions/:pav_id')
             .put(this.updatePavilion)
             .delete(this.deletePavilion);
 
@@ -58,66 +58,85 @@ class BasicsController {
         router.route('/debt/:player_id')
          	.put(this.updatePlayerDebtId);
 
+        //Historico + auxiliar de coches
+        router.route('/historic/:team_name')
+             .get(this.historic);
+
         return router;
     }
 
     // funciones Controller **********************************
     private login (req, res, next) {
         console.log('respuesta login'); 
-        this.loginData(res.body.email, res.body.password);
+        const player = this.loginData(req.body.email, req.body.password);
+
+        if(!player){
+            res.json(player);
+        }else{
+            res.status(404);
+        }
     }
 
     private register (req, res, next) {
         console.log('respuesta register');
         //devolver jugador que se ha registrado y la cookie
-        bbdd.checkRegisterPlayer(res.body.team, res.body.dorsal)
+        bbdd.checkRegisterPlayer(req.body.team, req.body.dorsal)
         .then(
             value => {
-		        bbdd.register(res.body.email, res.body.password)
-		        .then(
-		            value => {
-		                this.loginData(res.body.email, res.body.password);
-		                //res.json({message:'Usuario registrado'});
-		                next();
-		            }
-		        ).catch(
-		            err => {
-		                console.log('err');
-		                res.send(err);
-		                res.status(404).end();
-		            }
-		        );
-        	}
+                if(!value){ //Hay player, hacer update
+
+		            bbdd.register(req.body.team, req.body.dorsal,req.body.email, req.body.password)
+    		        .then(
+    		            value => {
+    		                this.loginData(req.body.email, req.body.password);
+    		                //res.json({message:'Usuario registrado'});
+    		                next();
+    		            }
+    		        ).catch(
+    		            err => {
+                            console.log('err');
+                            res.send(err);
+                            res.status(404).end();
+    		            }
+    		        );
+
+                }else{//vacío, haccer insert
+                    bbdd.registerNewPlayer(req.body.email, req.body.password, req.body.team, req.body.name, req.body.dorsal, req.body.nick)
+    		        .then(
+    		            value => {
+    		                this.loginData(req.body.email, req.body.password);
+    		                //res.json({message:'Usuario registrado'});
+    		                next();
+    		            }
+    		        ).catch(
+    		            err => {
+    		                console.log('err');
+    		                res.send(err);
+    		                res.status(404).end();
+    		            }
+    		        );
+
+                }
+
+            }
         ).catch(
             err => {
-                bbdd.registerNewPlayer(res.body.email, res.body.password, res.body.team, req.body.name, req.body.dorsal, req.body.nick)
-		        .then(
-		            value => {
-		                this.loginData(res.body.email, res.body.password);
-		                //res.json({message:'Usuario registrado'});
-		                next();
-		            }
-		        ).catch(
-		            err => {
-		                console.log('err');
-		                res.send(err);
-		                res.status(404).end();
-		            }
-		        );
+                console.log('err');
+                res.send(err);
+                res.status(404).end();
             }
         );
     }
 
     private loginData(email:string, password:string) {
-    	bbdd.login(email)
+    	bbdd.login(email, password)
         .then(
             value => {
-            	//ToDo if de comprobar la contraseña
-            	//ToDo al hacer login devolver jugador que se ha registrado
-                //res.send('Aqui se devolvera un cookie y el jugador completo de loggeo');
-                //bucle que busca si el usuario existe
-                //ToDo
-                //next();
+            	if(!value){ //existe player
+                    return value;
+                }else{
+                    return null;
+                }
             }
         ).catch(
             err => {
@@ -236,24 +255,6 @@ class BasicsController {
         );
     }
 
-    private infoCarId (req, res, next) {
-        console.log('respuesta infoCarId');
-        bbdd.infoCarId(req.params.id)
-        .then(
-            value => {
-                res.json(value);
-                next();
-            }
-        ).catch(
-            err => {
-                console.log('err');
-                res.send(err);
-                res.status(404).end();
-            }
-        );
-    }
-
-
     private updateCarId (req, res, next) {
         console.log('respuesta updateCarId');
         bbdd.updateCarId(req.params.id, req.body.owner, req.body.ownerId, req.body.spendingGas) //controlar que los tres parametros existan
@@ -291,8 +292,8 @@ class BasicsController {
     //+++++++++++++++++++  PLAYERS  ++++++++++++++++++
 
     private infoPlayers (req, res, next) {
-        console.log('respuesta infoPlayers');
-        bbdd.infoPlayers(req.body.team)
+        console.log('respuesta infoPlayers con ' + req.params.team_name);
+        bbdd.infoPlayers(req.params.team_name)
         .then(
             value => {
                 res.json(value);
@@ -308,28 +309,10 @@ class BasicsController {
     }
 
     private addPlayer (req, res, next) {
-        console.log('respuesta addPlayer');
-        bbdd.addPlayer(req.body.team, req.body.name, req.body.dorsal, req.body.nick)
+        console.log('respuesta addPlayer con ' + req.params.team_name);
+        bbdd.addPlayer(req.params.team_name, req.body.name, req.body.dorsal, req.body.nick)
         .then(
             value => {
-                res.json(value);
-                next();
-            }
-        ).catch(
-            err => {
-                console.log('err');
-                res.send(err);
-                res.status(404).end();
-            }
-        );
-    }
-
-    private infoPlayerId (req, res, next) { //info un solo jugador
-        console.log('respuesta infoPlayerId');
-        bbdd.infoPlayer(req.params.id)
-        .then(
-            value => {
-            	//por seguridad se comprueba que el jugador pertenezca al equipo que lo pide req.body.team
                 res.json(value);
                 next();
             }
@@ -386,7 +369,7 @@ class BasicsController {
 
     private infoPavilions (req, res, next) { //sacar todos los pabellones de un equipo
         console.log('respuesta infoPavilions');
-        bbdd.infoPavilions(req.body.team)
+        bbdd.infoPavilions(req.params.team_name)
         .then(
             value => {
                 res.json(value);
@@ -403,7 +386,7 @@ class BasicsController {
 
     private addPavilionTeam (req, res, next) { //añadir un pabellon
         console.log('respuesta addPavilionTeam');
-        bbdd.addPavilion(req.body.team, req.body.pavilion, req.body.distance)
+        bbdd.addPavilion(req.params.team_name, req.body.pavilion, req.body.distance)
         .then(
             value => {
                 res.json(value);
@@ -420,7 +403,7 @@ class BasicsController {
 
     private updatePavilion (req, res, next) {
         console.log('respuesta updatePavilion');
-        bbdd.updatePavilion(req.body.team, req.body.pavilion, req.body.distance)
+        bbdd.updatePavilion(req.params.pav_id, req.body.pavilion, req.body.distance)
         .then(
             value => {
                 res.json(value);
@@ -437,7 +420,26 @@ class BasicsController {
 
     private deletePavilion (req, res, next) {
         console.log('respuesta deletePavilion');
-        bbdd.deletePavilion(req.body.team, req.body.pavilion)
+        bbdd.deletePavilion(req.params.pav_id)
+        .then(
+            value => {
+                res.json(value);
+                next();
+            }
+        ).catch(
+            err => {
+                console.log('err');
+                res.send(err);
+                res.status(404).end();
+            }
+        );
+    }
+
+//+++++++++++++++++++  HISTORIC  ++++++++++++++++++
+
+    private historic (req, res, next) { //ToDo
+        console.log('respuesta historic con ' + req.params.team_name);
+        bbdd.historic(req.params.team_name)
         .then(
             value => {
                 res.json(value);
