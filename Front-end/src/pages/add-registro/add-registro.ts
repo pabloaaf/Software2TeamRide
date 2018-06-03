@@ -1,11 +1,10 @@
 import {Component} from '@angular/core';
-import { NavController, NavParams} from 'ionic-angular';
+import { NavController} from 'ionic-angular';
 
 import {HistoricoJugPage} from '../historico-jug/historico-jug';
 //import { AuthProvider } from '../../providers/auth/auth';
 import { HttpProvider } from '../../providers/http/http';
 import {cars} from "../../providers/globals/globals";
-import {players} from "../../providers/globals/globals";
 
 /**
  * Generated class for the AddRegistroPage page.
@@ -19,23 +18,19 @@ import {players} from "../../providers/globals/globals";
   templateUrl: 'add-registro.html',
 })
 export class AddRegistroPage {
-
- cars;
-  players;
+ public cochesSelec:number[];
+ public cars:cars[];
   constructor(public nav: NavController,private http:HttpProvider) {
     
     //console.log(this.http.getNameUss());
-    this.cars = [];
     this.http.getCarList().subscribe((coches:cars[])=>{
-        for(var i = 0; i < coches.length; i++){
-            this.cars.push(coches[i].id);
-          }
+        this.cars = coches;
       });
   }//fin constructor
 
   public showplayers(){
     console.log("peticion de jugadores.")
-    this.nav.push(HistoricoJugPage);
+    this.nav.push(HistoricoJugPage,this.cochesSelec);
   }// fin showplayers
 
 }

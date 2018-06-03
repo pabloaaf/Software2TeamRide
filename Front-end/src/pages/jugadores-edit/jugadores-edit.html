@@ -1,15 +1,64 @@
+<!--<style>
+    .boton {
+        color:white;
+        text-align:center;
+    }
+    
+    #edit {
+        position:absolute;
+        right: 25%;
+         background:green;
+    }
+    
+    #delete {
+        position:absolute;
+        right: 10%;
+         background:red;
+    }
+    
+</style>-->
 <ion-content padding>
-<button ion-button block (click)="nuevoJugador()"> New player</button>
-<ion-card *ngFor="let player of players">
+<button ion-button block (click)="nuevoJugador()"> New Player</button>
+
+<!--<ion-card *ngFor="let player of players">
     <ion-item>
-      <ion-icon name="football" item-start large></ion-icon> <!-- mostrar deuda y dorsal-->
-      <h2>{{player.id}}</h2>
-      <p>{{player.name}}</p>
-      <p>{{player.dorsal}}</p>
-      <p>{{player.deuda}}</p>
+      <ion-icon name="person" item-start large></ion-icon>
+      <button id="edit" ion-button type="button" value="Boton1" (click)="editarJugador(player.id)"><ion-icon name="create"></ion-icon></button>
+      <button id="delete" ion-button type="button" value="Boton2" (click)="borrarJugador(player.id)"><ion-icon name="trash"></ion-icon></button>
+      <h2>Nombre:{{player.name}}</h2>
+      <p>Dorsal:{{player.dorsal}}</p>
+      <p>Apodo:{{player.nick}}</p>
+      <p>Deuda:{{player.deuda}}</p>
+      
     </ion-item>
+</ion-card>-->
+
+<ion-card *ngFor="let player of players">
+<ion-card-content >
+  <ion-item>
+    <ion-avatar item-start>
+      <ion-card-title>{{player.dorsal}}</ion-card-title>
+    </ion-avatar>
+        {{player.name}} ({{player.nick}})
+  </ion-item>
+    <ion-row no-padding>
+      <ion-col text-center>
+        <button ion-button clear small color="energized" (click)="editarJugador(player.id)" icon-start>
+          <ion-icon name="create"></ion-icon>
+          Editar
+        </button>
+      </ion-col>
+      <ion-col text-right>
+        <button ion-button clear small color="danger" (click)="borrarJugador(player.id)" icon-start>
+          <ion-icon name="trash"></ion-icon>
+          Borrar
+        </button>
+      </ion-col>
+</ion-row>
+</ion-card-content>
 </ion-card>
 </ion-content>
+
 <!--
 <mbsc-card [options]="settings">
 <mbsc-card-header>

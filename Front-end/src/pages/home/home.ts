@@ -1,27 +1,26 @@
 import {Component} from '@angular/core';
-import { NavController } from 'ionic-angular';
-//import { AuthService } from '../../providers/auth-service/auth-service';
+import {App} from 'ionic-angular';
 import { LoginPage } from '../login/login';
-
-//import {AuthProvider} from '../../providers/auth/auth';
-//import {FirebaseDbProvider} from '../../providers/firebase-db/firebase-db';
+import { HttpProvider } from '../../providers/http/http';
+import {players} from "../../providers/globals/globals";
 
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html'
 })
 export class HomePage {
-  email = '';
-  team = '';
+  public playerAct:players;
 
-  constructor(private nav: NavController) { //private auth: AuthProvider, private db: FirebaseDbProvider
+  constructor(public appC:App, public http:HttpProvider) {
+    this.playerAct = this.http.getplayerAct();
     //let info = this.auth.getUserInfo();
     //this.email = this.auth.getUser().email;
     //this.team = this.db.getUserTeam(this.auth.getUser().uid);
   }
 
   public logout() {
-    this.nav.setRoot(LoginPage);
+    this.appC.getRootNav().setRoot(LoginPage);
+    //this.nav.setRoot(LoginPage);
     //this.auth.logout();
   }
 }

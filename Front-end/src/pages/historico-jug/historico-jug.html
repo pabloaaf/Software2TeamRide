@@ -18,7 +18,7 @@
 <form (ngSubmit)="sendCar()" #safeForm="ngForm">
 	<ion-label stacked>Selecciona los jugadores para el coche:</ion-label>
 	<ion-select placeholder="Select" [(ngModel)]="jugadoresSelec" multiple="true" name="algo">
-    <ion-option *ngFor="let item of players" value="{{item.id}}">{{item.name}}</ion-option>
+    <ion-option *ngFor="let item of players" value="{{item.id}}">{{item.name + " " + item.nick}}</ion-option>
 	</ion-select>
 	   	<button ion-button class="submit-btn" full type="submit" >Guardar jugadores
 	   	</button>
@@ -27,8 +27,3 @@
 </ion-content>
 
 <!--< -->
-
-  <ion-label stacked>Los jugadores:</ion-label>
-  <ion-select [(ngModel)]="jugadoresSelec" multiple="true" name="algo">
-    <ion-option *ngFor="let item of players" value="{{item.id}}">{{item.name}}</ion-option>
-  </ion-select>

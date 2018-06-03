@@ -46,7 +46,7 @@ class bbdd {
 
 	public login(email:string, password:string) {
 		return new Promise((resolve, reject) => {
-			this.conexion.query('SELECT * FROM players WHERE email = "'+email+'" AND password = '+password+'";', 
+			this.conexion.query('SELECT * FROM players WHERE email = "'+email+'" AND password = "'+password+'";', 
 				function (err, result) {
 					if (err) return reject(err);
 					resolve(result);
@@ -141,7 +141,7 @@ class bbdd {
 
 	public infoCars(team:string) { //supongo que será sacar una lista de los coches de cierto equipo
 		return new Promise((resolve, reject) => { //ToDo
-			this.conexion.query('SELECT id, owner, model, seats FROM cars WHERE team=\''+team+'\';',
+			this.conexion.query('SELECT * FROM cars WHERE team=\''+team+'\';',
 				function (err, result) {
 					if (err) return reject(err);
 					resolve(result);
@@ -149,10 +149,10 @@ class bbdd {
 		});
 	}
 
-	public addCar(team: string, owner: string, ownerId: number, spendingGas: string, model: string, seats:number) {
+	public addCar(team: string, owner: string, ownerId: number, spendingGas: string,gasPrice:string, model: string, seats:number) {
 		console.log(name);
 		return new Promise((resolve, reject) => {
-			this.conexion.query('INSERT INTO cars (team, owner, ownerId, spendingGas, model, seats) VALUES (\''+ team +'\', \''+ owner +'\', \''+ ownerId +'\', \''+ spendingGas +'\', \''+ model +'\', \''+seats+'\');',
+			this.conexion.query('INSERT INTO cars (team, owner, ownerId, spendingGas,gasPrice, model, seats) VALUES (\''+ team +'\', \''+ owner +'\', \''+ ownerId +'\', \''+ spendingGas +'\', \''+gasPrice+'\', \''+ model +'\', \''+seats+'\');',
 				(err, result) => {
 					if (err) reject(err);
 					resolve(result);
@@ -160,9 +160,9 @@ class bbdd {
 		});
 	}
 
-	public updateCarId(id: number, owner: string, ownerId: number, spendingGas:number) {
+	public updateCarId(id: number, spendingGas:number, gasPrice:string, model:string, seats:string) {
 		return new Promise((resolve, reject) => {
-			this.conexion.query('UPDATE cars SET owner=\''+owner+'\', ownerId=\''+ownerId+'\'spendingGas=\''+spendingGas+'\' WHERE id = \''+id+'\';', 
+			this.conexion.query('UPDATE cars SET spendingGas=\''+spendingGas+'\', gasPrice=\''+gasPrice+'\', model=\''+model+'\', seats=\''+seats+'\' WHERE id = \''+id+'\';', 
 				function (err, result) {
 					if (err) return reject(err);
 					resolve(result);
@@ -179,6 +179,18 @@ class bbdd {
 				});
 		});
 	}
+
+	public getInfoCarId(id: number) {
+		return new Promise((resolve, reject) => {
+			this.conexion.query('SELECT * FROM cars WHERE id= \''+ id +'\';',
+				function (err, result) {
+					if (err) return reject(err);
+					resolve(result);
+				});
+		});
+	}
+	
+
 
 	//+++++++++++++++  PLAYERS  ++++++++++++++++++
 
@@ -222,6 +234,17 @@ class bbdd {
 					resolve(result);
 				});
 		});
+	}
+
+	public getPlayerId(id:number){
+		return new Promise((resolve, reject) => {
+			this.conexion.query('SELECT * FROM players WHERE id= \''+id+'\';',
+				function (err, result) {
+					if (err) return reject(err);
+					resolve(result);
+				});
+		});
+
 	}
 
 	//+++++++++++++++  PAVILIONS  ++++++++++++++++++
@@ -281,10 +304,87 @@ class bbdd {
 
 	//+++++++++++++++  HISTORIC  ++++++++++++++++++
 
-	public historic(team:string) {
+
+	public addHistoric(team:string, pavilion:string, date:string) {
 		return new Promise((resolve, reject) => {
 			if(team == "") return reject("No se especifica el equipo");
-			this.conexion.query('SELECT * FROM players WHERE team= \''+team+'\';',
+			this.conexion.query('INSERT INTO historic (date, team, pavilion) VALUES (\''+ date +'\', \''+ team +'\', \''+ pavilion +'\' );',
+				function (err, result) {
+					if (err) return reject(err);
+					resolve(result);
+				});
+		});
+	}
+
+	public addTripCar(date:string, carId:number) {
+		return new Promise((resolve, reject) => {
+				this.conexion.query('INSERT INTO tripCars (date, carId, playerId) VALUES (\''+ date +'\', \''+ carId +'\');',
+				function (err, result) {
+					if (err) return reject(err);
+					resolve(result);
+				});
+		});
+	}
+	public addTripPlayer(date:string, playerId:number) {
+		return new Promise((resolve, reject) => {
+				this.conexion.query('INSERT INTO tripPlayers (date, carId, playerId) VALUES (\''+ date +'\', \''+ playerId +'\');',
+				function (err, result) {
+					if (err) return reject(err);
+					resolve(result);
+				});
+		});
+	}
+
+	
+	public getHistoric(team:string) {
+		return new Promise((resolve, reject) => {
+			if(team == "") return reject("No se especifica el equipo");
+			this.conexion.query('SELECT * FROM historic WHERE team= \''+team+'\';',
+				function (err, result) {
+					if (err) return reject(err);
+					resolve(result);
+				});
+		});
+	}
+
+	public getTripCars(team:string, date:string) {
+		return new Promise((resolve, reject) => {
+			if(team == "" || date == "" ) return reject("No se especifica el equipo o la fecha");
+			this.conexion.query('SELECT * FROM tripCars WHERE team= \''+team+'\' AND date="'+date+'" ORDERED BY date DESC;',
+				function (err, result) {
+					if (err) return reject(err);
+					resolve(result);
+				});
+		});
+	}
+
+	public getTripPlayers(team:string, date:string) {
+		return new Promise((resolve, reject) => {
+			if(team == "" || date == "" ) return reject("No se especifica el equipo o la fecha");
+			this.conexion.query('SELECT * FROM tripPlayers WHERE team= \''+team+'\' AND date="'+date+'";',
+				function (err, result) {
+					if (err) return reject(err);
+					resolve(result);
+				});
+		});
+	}
+
+
+	//++++++++++++++++ DEBT +++++++++++++++++++
+	
+	public updatePlayerDebt(playerId:number, debt:number){
+		return new Promise((resolve, reject) => {
+			this.conexion.query('UPDATE FROM playerts SET debt = "'+debt+'" WHERE id= \''+playerId+'\';',
+				function (err, result) {
+					if (err) return reject(err);
+					resolve(result);
+				});
+		});
+	}
+
+	public getPlayerDebt(playerId:number){
+		return new Promise((resolve, reject) => {
+			this.conexion.query('SELECT debt FROM players WHERE id= \''+playerId+'\';',
 				function (err, result) {
 					if (err) return reject(err);
 					resolve(result);

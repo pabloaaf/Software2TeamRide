@@ -1,11 +1,7 @@
 import {Component} from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
 import { NavController, NavParams} from 'ionic-angular';
 import {players} from "../../providers/globals/globals";
 import {NewPlayerPage} from '../new-player/new-player';
-
-
 import { HttpProvider } from '../../providers/http/http';
 /**
  * Generated class for the JugadoresEditPage page.
@@ -17,13 +13,14 @@ import { HttpProvider } from '../../providers/http/http';
 
 @Component({
   selector: 'page-jugadores-edit',
-  templateUrl: 'jugadores-edit.html',
+	templateUrl: 'jugadores-edit.html'
 })
 export class JugadoresEditPage {
 	public jugadorVacio:players;
 	public players:players[];
-  constructor(public nav: NavController, public navParams: NavParams,public http:HttpProvider, public httpclient:HttpClient) {
-  	this.jugadorVacio = new players(); 
+	public jugadorEditar:players;//se necesesita esta variable para poder editar los jugadores al usar el contructor y poder pasar el id.
+  constructor(public nav: NavController, public navParams: NavParams,public http:HttpProvider) {
+  	this.jugadorVacio = new players(0); 
   	 this.http.getPlayers().subscribe((play:players[])=>{
 	    this.players = play;
 	    console.log(play);
@@ -33,8 +30,19 @@ export class JugadoresEditPage {
 
   public nuevoJugador(){
     console.log("peticion de jugadores.")
-    this.nav.push(NewPlayerPage,this.jugadorVacio);
-  }// fi
-
+    this.nav.push(NewPlayerPage, this.jugadorVacio);
+  }
+  public editarJugador(id:number){
+  	this.jugadorEditar = new players(id);
+  	this.nav.push(NewPlayerPage, this.jugadorEditar);
+  }
+  public borrarJugador(id:number){
+  	this.http.deletePlayer(id).subscribe(data => {
+	      console.log(data);
+	    }, error => {
+	      console.log(error);
+	    });
+    this.nav.pop();
+  }
 
 }

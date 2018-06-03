@@ -19,6 +19,9 @@ import {HistoricoJugPage} from '../pages/historico-jug/historico-jug';
 import {PavEditPage} from '../pages/pav-edit/pav-edit';
 import {PavDestPage} from '../pages/pav-dest/pav-dest';
 import {NewPlayerPage} from '../pages/new-player/new-player';
+import {PavNewPage} from '../pages/pav-new/pav-new';
+import {CarsNewPage} from '../pages/cars-new/cars-new';
+import {InfoTravelPage} from '../pages/info-travel/info-travel';
 
 import { HttpProvider } from '../providers/http/http';
 import { GlobalsProvider } from '../providers/globals/globals';
@@ -42,7 +45,10 @@ import { HttpClientModule } from '@angular/common/http';
     HistoricoJugPage,
     PavEditPage,
     PavDestPage,
-    NewPlayerPage
+    NewPlayerPage,
+    PavNewPage,
+    CarsNewPage,
+    InfoTravelPage
   ],
   imports: [
     BrowserModule,
@@ -65,7 +71,10 @@ import { HttpClientModule } from '@angular/common/http';
     HistoricoJugPage,
     PavEditPage,
     PavDestPage,
-    NewPlayerPage
+    NewPlayerPage,
+    PavNewPage,
+    CarsNewPage,
+    InfoTravelPage
 
   ],
   providers: [
