@@ -46,7 +46,7 @@ class bbdd {
 
 	public login(email:string, password:string) {
 		return new Promise((resolve, reject) => {
-			this.conexion.query('SELECT * FROM players WHERE email = "'+email+'" AND password = '+password+'";', 
+			this.conexion.query('SELECT * FROM players WHERE email = "'+email+'" AND password = "'+password+'";', 
 				function (err, result) {
 					if (err) return reject(err);
 					resolve(result);
@@ -180,6 +180,18 @@ class bbdd {
 		});
 	}
 
+	public getInfoCarId(id: number) {
+		return new Promise((resolve, reject) => {
+			this.conexion.query('SELECT * FROM cars WHERE id= \''+ id +'\';',
+				function (err, result) {
+					if (err) return reject(err);
+					resolve(result);
+				});
+		});
+	}
+	
+
+
 	//+++++++++++++++  PLAYERS  ++++++++++++++++++
 
 	public infoPlayers(team:string) {
@@ -281,10 +293,65 @@ class bbdd {
 
 	//+++++++++++++++  HISTORIC  ++++++++++++++++++
 
-	public historic(team:string) {
+	public getHistoric(team:string) {
 		return new Promise((resolve, reject) => {
 			if(team == "") return reject("No se especifica el equipo");
 			this.conexion.query('SELECT * FROM players WHERE team= \''+team+'\';',
+				function (err, result) {
+					if (err) return reject(err);
+					resolve(result);
+				});
+		});
+	}
+
+	public addHistoric(team:string, pavilion:string, date:string) {
+		return new Promise((resolve, reject) => {
+			if(team == "") return reject("No se especifica el equipo");
+			this.conexion.query('INSERT INTO historic (date, team, pavilion) VALUES (\''+ date +'\', \''+ team +'\', \''+ pavilion +'\' );',
+				function (err, result) {
+					if (err) return reject(err);
+					resolve(result);
+				});
+		});
+	}
+
+	public getTrip(team:string) {
+		return new Promise((resolve, reject) => {
+			if(team == "") return reject("No se especifica el equipo");
+			this.conexion.query('SELECT * FROM players WHERE team= \''+team+'\';',
+				function (err, result) {
+					if (err) return reject(err);
+					resolve(result);
+				});
+		});
+	}
+
+	public addTrip(date:string, carId:number, playerId:number) {
+		return new Promise((resolve, reject) => {
+				this.conexion.query('INSERT INTO trips (date, carId, playerId) VALUES (\''+ date +'\', \''+ carId +'\', \''+ playerId +'\' );',
+				function (err, result) {
+					if (err) return reject(err);
+					resolve(result);
+				});
+		});
+	}
+	
+
+	//++++++++++++++++ DEBT +++++++++++++++++++
+	
+	public updatePlayerDebt(playerId:number, debt:number){
+		return new Promise((resolve, reject) => {
+			this.conexion.query('UPDATE FROM playerts SET debt = "'+debt+'" WHERE id= \''+playerId+'\';',
+				function (err, result) {
+					if (err) return reject(err);
+					resolve(result);
+				});
+		});
+	}
+
+	public getPlayerDebt(playerId:number){
+		return new Promise((resolve, reject) => {
+			this.conexion.query('SELECT debt FROM players WHERE id= \''+playerId+'\';',
 				function (err, result) {
 					if (err) return reject(err);
 					resolve(result);
