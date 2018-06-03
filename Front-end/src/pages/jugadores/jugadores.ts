@@ -29,5 +29,9 @@ export class JugadoresPage {
   ionViewDidLoad() {
     console.log('ionViewDidLoad JugadoresPage');
   }
+  public pagarDeuda(id:number){
+
+
+  }
 
 }

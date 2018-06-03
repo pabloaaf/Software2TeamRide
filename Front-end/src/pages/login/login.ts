@@ -30,10 +30,19 @@ export class LoginPage { //la clase es la que se llama en el app para ser ejecut
   }
 
   public login() {
-    this.showLoading()
-    this.nav.setRoot(TabsInitPage); //probar push
+    this.showLoading();
+    //this.nav.setRoot(TabsInitPage); //probar push
     console.log(this.registerCredentials.email);
     this.http.setNameUss(this.registerCredentials.email);
+    this.http.login(this.registerCredentials.email,this.registerCredentials.password).then(bool => {
+      console.log(bool);
+      if(bool) {
+        this.nav.setRoot(TabsInitPage);
+      } else {
+        this.showError("Acceso Denegado");
+      }
+    });
+
     /*this.auth.loginUser(this.registerCredentials.email, this.registerCredentials.password)
       .then((user) => {
         this.nav.setRoot(TabsInitPage);
@@ -71,6 +80,6 @@ export class LoginPage { //la clase es la que se llama en el app para ser ejecut
       subTitle: text,
       buttons: ['OK']
     });
-    alert.present(prompt);
+    alert.present(); // prompt
   }
 }

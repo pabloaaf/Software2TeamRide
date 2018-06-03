@@ -17,12 +17,24 @@
 
 <ion-card *ngFor="let player of players">
     <ion-item>
-      <ion-icon name="football" item-start large></ion-icon> <!-- mostrar deuda y dorsal-->
-      <h2>{{player.id}}</h2>
-      <p>{{player.name}}</p>
-      <p>{{player.dorsal}}</p>
-      <p>{{player.deuda}}</p>
-    </ion-item>
+    <ion-avatar item-start>
+      <ion-card-title>{{player.dorsal}}</ion-card-title>
+    </ion-avatar>
+    <ion-card-title>
+        {{player.name}} ({{player.nick}})
+      </ion-card-title>
+  </ion-item>
+   <ion-row no-padding>
+      <ion-col text-center>
+          Deuda: {{player.debt}}
+      </ion-col>
+      <ion-col text-right>
+        <button ion-button clear small color="danger" (click)="pagarDeuda(player.id)" icon-start>
+          <ion-icon name="trash"></ion-icon>
+          Pagar Deuda
+        </button>
+      </ion-col>
+</ion-row>
 </ion-card>
 
 <!--<form #safeForm="ngForm">

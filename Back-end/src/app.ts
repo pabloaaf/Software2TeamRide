@@ -6,11 +6,11 @@ import * as cors from "cors";
 
 //options for cors midddleware
 const options:cors.CorsOptions = {
-  allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept", "X-Access-Token"],
+  allowedHeaders: ["Origin", "X-Requested-With", "X-Requested-By", "Content-Type", "Accept", "X-Access-Token","Access-Control-Allow-Origin"],
   credentials: true,
-  methods: "GET,HEAD,OPTIONS,PUT,PATCH,POST,DELETE",
+  methods: "GET,POST,PUT,DELETE,OPTIONS,HEAD,PATCH",
   origin: "*",
-  preflightContinue: false
+  preflightContinue: true
 };
 
 class App {
@@ -20,18 +20,22 @@ class App {
 		this.express = express();
 		bbdd;
 		//use cors middleware
-		this.express.use(cors(options));
+		this.express.use(cors(options));//options
 		//enable pre-flight
 		this.express.options("*", cors(options));
 		this.express.use(bodyParser.urlencoded({ extended:false }));
 		this.express.use(bodyParser.json());
-		this.express.use('/v0', controller.contRoutes());
 		this.express.use('', this.pruebas);
+		this.express.use('/v0', controller.contRoutes());
 	}
 
 	private pruebas(req, res, next) {
 		console.log(req.body);
 		next();
 	}
+
+
 }
+
+
 export default new App().express;
