@@ -1,0 +1,24 @@
+<ion-content padding>
+  <form #dataPl="ngForm" (ngSubmit)="savePlayer()">
+    <ion-list>
+      <ion-item>
+        <ion-icon name="person" item-start></ion-icon>
+        <ion-label stacked>Nombre:</ion-label>
+        <ion-input type="text" placeholder="Nombre" name="Nombre" [(ngModel)]="jugador.name" required></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-icon name="person" item-start></ion-icon>
+        <ion-label stacked>Apodo:</ion-label>
+        <ion-input type="text" placeholder="Apodo" name="Apodo" [(ngModel)]="jugador.nick" required></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-icon name="mail" item-start></ion-icon>
+        <ion-label stacked>Dorsal:</ion-label>
+        <ion-input type="number" placeholder="Dorsal" name="Dorsal" [(ngModel)]="jugador.dorsal" required></ion-input>
+      </ion-item>
+    </ion-list>
+    <div padding>
+      <button ion-button block type="submit" [disabled]="!dataPl.form.valid">Guardar</button>
+    </div>
+  </form>
+</ion-content>

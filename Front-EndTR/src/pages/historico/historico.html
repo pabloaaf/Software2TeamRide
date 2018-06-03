@@ -1,0 +1,22 @@
+<ion-header>
+
+</ion-header>
+<ion-card *ngFor="let player of players">
+<ion-card-content >
+  <ion-item>
+    <ion-avatar item-start>
+      <ion-card-title> Viaje del: {{historic.date}}</ion-card-title>
+    </ion-avatar>
+  </ion-item>
+    <ion-row no-padding>
+      <ion-col text-center>
+        <button ion-button clear small color="energized" (click)="verDetalles(historic.date)" icon-start>
+          <ion-icon name="create"></ion-icon>
+          Ver Detalles
+        </button>
+</ion-row>
+</ion-card-content>
+</ion-card>
+</ion-content>
+
+<!-- -->

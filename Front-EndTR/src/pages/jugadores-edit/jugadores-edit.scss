@@ -1,0 +1,22 @@
+page-jugadores-edit {
+    .boton {
+        padding:20px;
+        color:white;
+        font:bold 10px/10px verdana;
+        width:100px;
+        cursor:hand;
+        text-align:center;
+    }
+    
+    #edit {
+        position:absolute;
+        right: 25%;
+         background:green;
+    }
+    
+    #delete {
+        position:absolute;
+        right: 10%;
+         background:red;
+    }
+}

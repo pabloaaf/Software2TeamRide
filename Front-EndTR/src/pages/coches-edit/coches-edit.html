@@ -1,0 +1,30 @@
+<ion-content padding>
+<button ion-button block (click)="nuevoCoche()"> New Car</button>
+<ion-card *ngFor="let car of cars">
+  <ion-card-content >
+  <ion-item>
+    <ion-avatar item-start>
+      <ion-card-title> <ion-icon name="car" item-start large></ion-icon> <!-- mostrar deuda y dorsal--></ion-card-title>
+    </ion-avatar>
+     {{car.model}} {{car.owner}} 
+      <ion-row>
+      seats({{car.seats}})
+      </ion-row>
+  </ion-item>
+    <ion-row no-padding>
+      <ion-col text-center>
+        <button ion-button clear small color="energized" (click)="editarCoche(car.id)" icon-start>
+          <ion-icon name="create"></ion-icon>
+          Editar
+        </button>
+      </ion-col>
+      <ion-col text-right>
+        <button ion-button clear small color="danger" (click)="borrarCoche(car.id)" icon-start>
+          <ion-icon name="trash"></ion-icon>
+          Borrar
+        </button>
+      </ion-col>
+</ion-row>
+</ion-card-content>
+</ion-card>
+</ion-content>
