@@ -1,7 +1,9 @@
 import * as express from 'express'
+import * as uuidRand from 'uuid/v4'
 import bbdd from './bbdd';
 
 class BasicsController {
+    public express;
 
     constructor () {
     }
@@ -14,10 +16,13 @@ class BasicsController {
         */
     // rutas Controller **********************************
     public contRoutes() {
+		this.express = express();
         let router = express.Router();
         //registro
         router.route('/login/')
-            .get(this.login)
+            .post(this.login)
+
+        router.route('/register/')
             .post(this.register);
 
         // teams
@@ -66,12 +71,23 @@ class BasicsController {
     }
 
     // funciones Controller **********************************
+    private calcNewToken() {
+        let token:string;
+        do {
+            token = uuidRand();
+        } while (!bbdd.verifyUniqueToken(token));
+        return token;
+    }
+
+    //login *************************************************
     private login (req, res, next) {
         console.log('respuesta login'); 
         const player = this.loginData(req.body.email, req.body.password);
+        //ToDo comparar la cookie con las anteriores
 
         if(!player){
-            res.json(player);
+            let token = this.calcNewToken();
+            res.json({payer:player,token:token});
         }else{
             res.status(404);
         }
@@ -129,7 +145,7 @@ class BasicsController {
     }
 
     private loginData(email:string, password:string) {
-    	bbdd.login(email, password)
+        return bbdd.login(email, password)
         .then(
             value => {
             	if(!value){ //existe player

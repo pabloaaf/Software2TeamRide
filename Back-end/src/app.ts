@@ -33,5 +33,9 @@ class App {
 		console.log(req.body);
 		next();
 	}
+
+
 }
+
+
 export default new App().express;

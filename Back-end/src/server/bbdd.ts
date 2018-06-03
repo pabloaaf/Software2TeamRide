@@ -7,6 +7,25 @@ class bbdd {
 	constructor() {
 		this.conexion = this.crearConexion();
 	}
+
+	//******************* TOKEN ********************
+
+	public verifyUniqueToken(token: string) {
+		return new Promise((resolve, reject) => {
+			this.conexion.query('SELECT * FROM tokens WHERE token = "'+token+'";', 
+				function (err, result) {
+					if (err) return reject(err);
+					console.log(result);
+					if(result == "") {
+						resolve(true);
+					} else {
+						resolve(false);
+					}
+				});
+		});
+	}
+
+
 	//******************* CONEXION ********************
 
 	private crearConexion() {
