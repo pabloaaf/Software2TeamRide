@@ -16,20 +16,19 @@ import {pavilions} from "../../providers/globals/globals";
   templateUrl: 'pav-dest.html',
 })
 export class PavDestPage {
-	pavilions;
+	public pavilions:pavilions[];
+  public pavSelec:number;
   constructor(public navCtrl: NavController, public navParams: NavParams, public http:HttpProvider) {
 
   	this.http.getPabellones().subscribe((pav:pavilions[])=>{
-	  	for(var i = 0; i < pav.length; i++){
-	        this.pavilions.push(pav[i].name);
-	        console.log(pav[i].name);
-	      }
+      this.pavilions = pav;
 	  });
 
   }
 
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad PavDestPage');
+  allset() {
+    this.http.addHistorico(this.pavSelec);
+    console.log('allset PavDestPage');
   }
 
 }

@@ -1,3 +1,21 @@
 page-pav-edit {
 
+    .boton {
+        color:white;
+        text-align:center;
+    }
+    
+    #edit {
+        position:absolute;
+        right: 25%;
+         background:green;
+    }
+    
+    #delete {
+        position:absolute;
+        right: 10%;
+         background:red;
+    }
+    
+
 }

@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
-
+import {pavilions} from "../../providers/globals/globals";
 import { HttpProvider } from '../../providers/http/http';
+import {PavNewPage} from '../pav-new/pav-new';
+
 /**
  * Generated class for the PavEditPage page.
  *
@@ -13,20 +15,36 @@ import { HttpProvider } from '../../providers/http/http';
 @Component({
   selector: 'page-pav-edit',
   templateUrl: 'pav-edit.html',
+  //styleUrls: ['./pav-edit.scss']
 })
 export class PavEditPage {
-
-	safePav = { nombre: '', distancia: 0}; //donde se guarda el nombre del pabellon
-  constructor(public navCtrl: NavController, public navParams: NavParams,public http:HttpProvider) {
+  public pavVacio:pavilions;
+  public pavilions:pavilions[];
+  public pavEditar:pavilions;
+  constructor(public nav: NavController, public navParams: NavParams,public http:HttpProvider) {
+    this.pavVacio = new pavilions(0); 
+     this.http.getPabellones().subscribe((pav:pavilions[])=>{
+      this.pavilions = pav;
+      console.log(pav);
+  });
   }
 
-  public putPav(){
-  	console.log("entra, nombre del pabellon " + this.safePav.nombre + " distancia: " + this.safePav.distancia);
-  	this.http.postPabellones(this.safePav.nombre, this.safePav.distancia).subscribe(data => {
-      console.log(data);
-    }, error => {
-      console.log(error);
-    });;
+
+  public nuevoPabellon(){
+    console.log("peticion de jugadores.")
+    this.nav.push(PavNewPage, this.pavVacio);
   }
+  public editaPabellon(id:number){
+     this.pavEditar = new pavilions(id);
+     this.nav.push(PavNewPage, this.pavEditar);
+   }
+  public borrarPabellon(id:number){
+     this.http.deletePav(id).subscribe(data => {
+        console.log(data);
+      }, error => {
+        console.log(error);
+      });
+     this.pavilions.pop();
+   }
 
 }
