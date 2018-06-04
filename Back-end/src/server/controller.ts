@@ -63,7 +63,6 @@ class BasicsController {
         //cambiar deudas
         router.route('/debt/:player_id')
              .put(this.updatePlayerDebt);
-<<<<<<< HEAD
 
         //Historico 
         router.route('/historic/:team_name/:numData')
@@ -77,13 +76,6 @@ class BasicsController {
         router.route('/tripPlayers/:team_name/:date')
              .get(this.getTripPlayers);
 
-=======
-
-        //Historico + auxiliar de coches
-        router.route('/historic/:team_name')
-             .get(this.getHistoric)
-             .post(this.addHistoric);
->>>>>>> 7d320e018458c01eb4660b64c65ad1e80b77d45c
 
         return router;
     }
@@ -103,11 +95,7 @@ class BasicsController {
         bbdd.login(req.body.email, req.body.password).then(
             value => {
                 console.log(value);
-<<<<<<< HEAD
                 if(Object.keys(value).length != 0){ //existe player
-=======
-                if(value === []){ //existe player
->>>>>>> 7d320e018458c01eb4660b64c65ad1e80b77d45c
                     let token:string = '';
                     do {
                         token = uuidRand();
@@ -139,11 +127,7 @@ class BasicsController {
     		            value => {
     		                bbdd.login(req.body.email, req.body.password).then(
                                 value => {
-<<<<<<< HEAD
                                     if(Object.keys(value).length != 0){ //existe player
-=======
-                                    if(value){ //existe player
->>>>>>> 7d320e018458c01eb4660b64c65ad1e80b77d45c
                                         let token:string = '';
                                         do {
                                             token = uuidRand();
@@ -176,11 +160,7 @@ class BasicsController {
     		            value => {
                             bbdd.login(req.body.email, req.body.password).then(
                                 value => {
-<<<<<<< HEAD
                                     if(Object.keys(value).length != 0){ //existe player
-=======
-                                    if(value){ //existe player
->>>>>>> 7d320e018458c01eb4660b64c65ad1e80b77d45c
                                         let token:string = '';
                                         do {
                                             token = uuidRand();
@@ -313,12 +293,8 @@ class BasicsController {
 
     private addCar (req, res, next) { //añadir coche a team
         console.log('respuesta addCar');
-<<<<<<< HEAD
 
         bbdd.addCar(req.params.team_name, req.body.owner, req.body.ownerId, req.body.spendingGas,req.body.gasPrice, req.body.model, req.body.seats)
-=======
-        bbdd.addCar(req.params.team_name, req.body.owner, req.body.ownerId, req.body.spendingGas, req.body.model, req.body.seats)
->>>>>>> 7d320e018458c01eb4660b64c65ad1e80b77d45c
         .then(
             value => {
                 res.json(value);
@@ -335,11 +311,7 @@ class BasicsController {
 
     private updateCarId (req, res, next) {
         console.log('respuesta updateCarId');
-<<<<<<< HEAD
         bbdd.updateCarId(req.params.cars_id, req.body.spendingGas, req.body.gasPrice, req.body.model, req.body.seats) //controlar que los tres parametros existan
-=======
-        bbdd.updateCarId(req.params.cars_id, req.body.owner, req.body.ownerId, req.body.spendingGas) //controlar que los tres parametros existan
->>>>>>> 7d320e018458c01eb4660b64c65ad1e80b77d45c
         .then(
             value => {
                 res.json(value);
@@ -409,11 +381,7 @@ class BasicsController {
 
     private updatePlayerId (req, res, next) {
         console.log('respuesta updatePlayerId');
-<<<<<<< HEAD
         bbdd.updatePlayer(req.params.players_id, req.body.name, req.body.dorsal, req.body.nick)
-=======
-        bbdd.updatePlayer(req.params.players_id, req.body.nombre, req.body.dorsal, req.body.nick)
->>>>>>> 7d320e018458c01eb4660b64c65ad1e80b77d45c
         .then(
             value => {
                 res.json(value);
@@ -517,7 +485,6 @@ class BasicsController {
 
 //+++++++++++++++++++  HISTORIC  ++++++++++++++++++
 
-<<<<<<< HEAD
     private getHistoric (req, res, next) {
         console.log('respuesta historic con ' + req.params.team_name);
         bbdd.getHistoric(req.params.team_name)
@@ -533,8 +500,8 @@ class BasicsController {
                 for(let i = 0; i < numData; i++){
                     result.push(Object.keys(value)[i]);
                 }
-
-                res.json(result);
+                console.log(result);
+                res.json(value);
                 next();
             }
         ).catch(
@@ -573,11 +540,6 @@ class BasicsController {
     private getTripCars(res, req, next){
         console.log('respuesta tripCars con ' + req.params.team_name + req.params.date);
         bbdd.getTripCars(req.params.team_name, req.params.date)
-=======
-    private getHistoric (req, res, next) { //ToDo
-        console.log('respuesta historic con ' + req.params.team_name);
-        bbdd.getHistoric(req.params.team_name)
->>>>>>> 7d320e018458c01eb4660b64c65ad1e80b77d45c
         .then(
             value => {
                 res.json(value);
@@ -592,7 +554,6 @@ class BasicsController {
         );
     }
 
-<<<<<<< HEAD
     private getTripPlayers(res, req, next){
         console.log('respuesta tripPlayers con ' + req.params.team_name + req.params.date);
         bbdd.getTripPlayers(req.params.team_name, req.params.date)
@@ -600,15 +561,6 @@ class BasicsController {
             value => {
                 res.json(value);
                 next();
-=======
-    private addHistoric (req, res, next) { //ToDo
-        console.log('respuesta historic con ' + req.params.team_name);
-        let date:string = moment().format("MM/DD/YYYY");
-        bbdd.addHistoric(req.params.team_name, req.body.pavilion, date)
-        .then(
-            value => {
-                bbdd.addTrip(date, req.body.carId, req.body.playerId);
->>>>>>> 7d320e018458c01eb4660b64c65ad1e80b77d45c
             }
         ).catch(
             err => {
@@ -617,10 +569,7 @@ class BasicsController {
                 res.status(404).end();
             }
         );
-<<<<<<< HEAD
         
-=======
->>>>>>> 7d320e018458c01eb4660b64c65ad1e80b77d45c
     }
 
 //+++++++++++++++++++ DEBTS +++++++++++++++++++++

@@ -24,6 +24,22 @@
               <ion-input type="password" placeholder="Password" name="password"
                          [(ngModel)]="registerCredentials.password" required></ion-input>
             </ion-item>
+                <!--añadidos-->
+            <ion-item>
+              <ion-icon name="person" item-left></ion-icon>
+              <ion-label stacked>Nombre:</ion-label>
+              <ion-input type="text" placeholder="Nombre" name="Nombre" [(ngModel)]="registerCredentials.name" required></ion-input>
+              </ion-item>
+            <ion-item>
+              <ion-icon name="person" item-start></ion-icon>
+              <ion-label stacked>Apodo:</ion-label>
+              <ion-input type="text" placeholder="apodo" name="apodo" [(ngModel)]="registerCredentials.nick" required></ion-input>
+            </ion-item>
+            <ion-item>
+            <ion-icon name="mail" item-start></ion-icon>
+            <ion-label stacked>Dorsal:</ion-label>
+            <ion-input type="number" placeholder="Dorsal" name="Dorsal" [(ngModel)]="registerCredentials.dorsal" required></ion-input>
+            </ion-item>
 
             <ion-item>
               <ion-icon name="people" item-left></ion-icon>

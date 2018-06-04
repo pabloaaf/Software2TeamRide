@@ -11,7 +11,7 @@ import { HttpProvider } from '../../providers/http/http';
 })
 export class RegisterPage {
   createSuccess = false;
-  registerCredentials = { email: '', password: '', team: '' }; //registerCredentials
+  registerCredentials = { email: '', password: '', team: '',name:'',dorsal:0,nick:''}; //registerCredentials
   teams;
 
   constructor(private nav: NavController, private http:HttpProvider, private alertCtrl: AlertController) {
@@ -39,6 +39,11 @@ export class RegisterPage {
     if(aux===0){
       //this.db.registerTeam(this.registerCredentials.team);
     }
+    this.http.registrer(this.registerCredentials.email,this.registerCredentials.password,this.registerCredentials.name,this.registerCredentials.nick,this.registerCredentials.dorsal,this.registerCredentials.team).subscribe(data => {
+        console.log(data);
+      }, error => {
+        console.log(error);
+      });
     /*this.auth.registerUser(this.registerCredentials)
     .then((user) => {
       this.showPopup("Success", "Account created.");

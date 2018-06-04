@@ -12,7 +12,7 @@ export class HistoricoPage {
 	public historic:historic[];
 	
   constructor(public nav: NavController, public navParams: NavParams, public http:HttpProvider) {
-  	this.http.infoHistorico().subscribe((his:historic[])=>{
+  	this.http.infoHistorico(10).subscribe((his:historic[])=>{
 	    this.historic = his;
 	    console.log(his);
 	});

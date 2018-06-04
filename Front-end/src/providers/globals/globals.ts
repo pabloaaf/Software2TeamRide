@@ -16,7 +16,6 @@ export class GlobalsProvider {
 }
 export class teams{
 	name:string;
-	teamID:number;
 	//id: number;
 	//players: players[];
 	//cars: cars[];
@@ -39,9 +38,14 @@ export class players{
 	deuda : number;
 	//añadir pasword
 	pasw: string;
-	constructor(){
-		this.id = 0;
+	constructor(id:number){
+		this.id = id;
 	}
+}
+
+export class register{
+	player:players;
+	token:string;
 }
 
 export class cars{
@@ -50,24 +54,42 @@ export class cars{
 	owner:string;
 	team:string;
 	spendingGas:number;
+	gasPrice:number;
 	model:string;
 	seats: number;
 
+	constructor(id:number){
+		this.id = id;
+	}
 
 }
 export class pavilions{
-	distance:number;
-	name:string;
-
-	constructor(){
-	}
-
-//crear nueva clase, relacion entre pabellon y equipo
-}
-export class pavteam{
-
 	team: string;
 	pavilion: string;
 	distance: number;
+	id:number;
+	constructor(id:number){
+		this.id = id;
+	}
 
+//crear nueva clase, relacion entre pabellon y equipo
+
+//historic; date(string), team,pavilionId
+//tripCars: date(string), team, carId
+//tripPlayers: date(string), team, playerId
+}
+export class tripCars{
+	 date:string;
+	 team:string;
+	 carId:number;
+}
+export class tripPlayers{
+	 date:string;
+	 team:string;
+	 playerId:number;
+}
+export class historic{
+	 date:string;
+	 team:string;
+	 pavilionId:number;
 }
