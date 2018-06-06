@@ -21,7 +21,7 @@ class BasicsController {
         let router = express.Router();
         //registro
         router.route('/login/')
-            .post(this.login)
+            .post(this.login);
 
         router.route('/register/')
             .post(this.register);
@@ -30,8 +30,8 @@ class BasicsController {
         router.route('/teams/')
             .get(this.infoTeams)
             .post(this.addTeam)
-            .put(this.updateTeam)
-            .delete(this.deleteTeam);
+            //.put(this.updateTeam)
+            //.delete(this.deleteTeam);
 
         //cars
         router.route('/cars/:team_name')
@@ -66,7 +66,9 @@ class BasicsController {
 
         //Historico 
         router.route('/historic/:team_name/:numData')
-             .get(this.getHistoric)
+             .get(this.getHistoric);
+
+        router.route('/historic/:team_name/')
              .post(this.addHistoric);
 
         //auxiliares historico
@@ -91,27 +93,32 @@ class BasicsController {
 
     //login *************************************************
     private login (req, res, next) {
-        console.log('respuesta login'); 
-        bbdd.login(req.body.email, req.body.password).then(
-            value => {
-                console.log(value);
-                if(Object.keys(value).length != 0){ //existe player
-                    let token:string = '';
-                    do {
-                        token = uuidRand();
-                    } while (!bbdd.verifyUniqueToken(token));
-                    res.json({player:value[0],token:token});
-                }else{
+        console.log('respuesta login');
+        if(req.body.password.lenght >0) {
+            bbdd.login(req.body.email, req.body.password).then(
+                value => {
+                    console.log(value);
+                    if(Object.keys(value).length != 0){ //existe player
+                        let token:string = '';
+                        do {
+                            token = uuidRand();
+                        } while (!bbdd.verifyUniqueToken(token));
+                        res.json({player:value[0],token:token});
+                    }else{
+                        res.status(404).end();
+                    }
+                }
+            ).catch(
+                err => {
+                    console.log(err);
+                    //res.send('Usuario no encontrado');
                     res.status(404).end();
                 }
-            }
-        ).catch(
-            err => {
-                console.log(err);
-                //res.send('Usuario no encontrado');
-                res.status(404).end();
-            }
-        );
+            );
+        } else{
+            res.status(404).json({message: "contraseña incorrecta"});
+        }
+        
         //ToDo comparar la cookie con las anteriores
     }
 
@@ -236,7 +243,7 @@ class BasicsController {
         );
     }
 
-    private updateTeam (req, res, next) { //pasar nombre y un nombre nuevo para actualizarlo 
+    /*private updateTeam (req, res, next) { //pasar nombre y un nombre nuevo para actualizarlo 
     	//todo los jugadores del equipo lo actualizaran en cascada
         console.log('respuesta actualizarTeamId');
         bbdd.updateTeam(req.body.name, req.body.newName)
@@ -270,7 +277,7 @@ class BasicsController {
                 res.status(404).end();
             }
         );
-    }
+    }*/
 
     //+++++++++++++++++++ CAR ++++++++++++++++++++++
 
@@ -294,7 +301,7 @@ class BasicsController {
     private addCar (req, res, next) { //añadir coche a team
         console.log('respuesta addCar');
 
-        bbdd.addCar(req.params.team_name, req.body.owner, req.body.ownerId, req.body.spendingGas,req.body.gasPrice, req.body.model, req.body.seats)
+        bbdd.addCar(req.body.ownerId, req.body.owner, req.params.team_name, req.body.spendingGas, req.body.gasPrice, req.body.model, req.body.seats)
         .then(
             value => {
                 res.json(value);
@@ -364,7 +371,7 @@ class BasicsController {
 
     private addPlayer (req, res, next) {
         console.log('respuesta addPlayer con ' + req.params.team_name);
-        bbdd.addPlayer(req.params.team_name, req.body.name, req.body.dorsal, req.body.nick)
+        bbdd.addPlayer(req.params.team_name, req.body.name, req.body.nick, req.body.dorsal)
         .then(
             value => {
                 res.json(value);
@@ -486,21 +493,12 @@ class BasicsController {
 //+++++++++++++++++++  HISTORIC  ++++++++++++++++++
 
     private getHistoric (req, res, next) {
-        console.log('respuesta historic con ' + req.params.team_name);
-        bbdd.getHistoric(req.params.team_name)
+        console.log('respuesta getHistoric con ' + req.params.team_name);
+        console.log(req.params);
+        bbdd.getHistoric(req.params.team_name, req.params.numData)
         .then(
             value => {
-
-                let numData = req.params.numData;
-                if(Object.keys(value).length < numData ){
-                    numData = Object.keys(value).length;
-                }
-
-                let result:Array<any>;
-                for(let i = 0; i < numData; i++){
-                    result.push(Object.keys(value)[i]);
-                }
-                console.log(result);
+                console.log(value);
                 res.json(value);
                 next();
             }
@@ -514,19 +512,48 @@ class BasicsController {
     }
 
     private addHistoric (req, res, next) { 
-        console.log('respuesta historic con ' + req.params.team_name);
+        console.log('respuesta addHistoric con ' + req.params.team_name);
         let date:string = moment().format("YYYY/MM/DD");
+        console.log(date);
+        date = date.substring(0,10);
+        console.log(date);
         bbdd.addHistoric(req.params.team_name, req.body.pavilionId, date)
         .then(
             value => {
 
                 for(let i = 0; i < req.body.idCars.length; i++){
-                    bbdd.addTripCar(date, req.body.idCars[i]);
-                }
-                for(let i = 0; i < req.body.idPlayers.length; i++){
-                    bbdd.addTripPlayer(date, req.body.idPlayers[i]);
+                    bbdd.addTripCar(date, req.params.team_name, req.body.idCars[i]).then(
+                    value => {
+console.log('segundo car con ' + req.body.idCars[i]);
+for(let i = 0; i < req.body.idPlayers.length; i++){
+                    bbdd.addTripPlayer(date, req.params.team_name, req.body.idPlayers[i]).then(
+                    value => {
+console.log('tercero player con ' + req.body.idPlayers[i]);
+console.log('fin');
+                res.send("funciona");
+                res.status(200).end();
+                    }
+                    ).catch(
+                    err => {
+                        console.log('err');
+                        res.send(err);
+                        res.status(404).end();
+                    }
+                );
+                    console.log('tercero player con ' + req.body.idPlayers[i]);
                 }
 
+                    }
+                    ).catch(
+                    err => {
+                        console.log('err');
+                        res.send(err);
+                        res.status(404).end();
+                    }
+                );
+                    
+                }
+                
             }
         ).catch(
             err => {
@@ -537,8 +564,9 @@ class BasicsController {
         );
     }
 
-    private getTripCars(res, req, next){
-        console.log('respuesta tripCars con ' + req.params.team_name + req.params.date);
+    private getTripCars(req, res, next){
+        console.log(req.params);
+        console.log('respuesta tripCars con ' + req.params.team_name + " en " + req.params.date);
         bbdd.getTripCars(req.params.team_name, req.params.date)
         .then(
             value => {
@@ -554,8 +582,9 @@ class BasicsController {
         );
     }
 
-    private getTripPlayers(res, req, next){
-        console.log('respuesta tripPlayers con ' + req.params.team_name + req.params.date);
+    private getTripPlayers(req, res, next){
+        console.log(req.params);
+        console.log('respuesta tripPlayers con ' + req.params.team_name + " en " + req.params.date);
         bbdd.getTripPlayers(req.params.team_name, req.params.date)
         .then(
             value => {
@@ -569,7 +598,6 @@ class BasicsController {
                 res.status(404).end();
             }
         );
-        
     }
 
 //+++++++++++++++++++ DEBTS +++++++++++++++++++++
@@ -594,7 +622,6 @@ class BasicsController {
     private updatePlayerDebt (req, res, next) { //ToDo
         console.log('respuesta updatePlayerDebt');
 
-
         let debts = this.calculateDebt(req.body.distance, req.body.cars, req.body.players); //pagos parciales de los conductores y en el 0 el total
         if (debts == null){
             console.log('err');
@@ -602,8 +629,7 @@ class BasicsController {
             res.status(404).end();
 
         }
-        for (let i = 0; i < req.body.cars.length; i++) {
-            
+        for (let i = 0; i < req.body.cars.length; i++) {            
             bbdd.getInfoCarId(req.body.cars[i])
             .then(
                 value => {
@@ -628,8 +654,7 @@ class BasicsController {
         
         let payment = debts[0]/req.body.players.length;
 
-        for (let i = 0; i < req.body.players.length; i++) {
-            
+        for (let i = 0; i < req.body.players.length; i++) {         
             let oldDebt = this.getPlayerDebt(req.body.players[i], res);
             bbdd.updatePlayerDebt(req.body.players[i], oldDebt['debt']+payment) //actualizar las dedudas de los jugadores
             .then(
@@ -645,11 +670,9 @@ class BasicsController {
                 }
            );
         }
-
     }
 
     private calculateDebt( distance:number, cars:Array<number>, players:Array<number>):Array<number>{
-
         let result = new Array(cars.length + 1); //0-total, resto-parciales
         let i = 0;
         let totalSpend = 0;
@@ -672,14 +695,7 @@ class BasicsController {
         }
         result[0] = totalSpend;
         return result;
-
     }
-
-
-
-
-
-
 }
 
 export default new BasicsController();

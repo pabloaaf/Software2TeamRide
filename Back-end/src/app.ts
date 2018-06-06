@@ -30,7 +30,10 @@ class App {
 	}
 
 	private pruebas(req, res, next) {
+		console.log("ini pruebas");
+		console.log(req.params);
 		console.log(req.body);
+		console.log("fin pruebas");
 		next();
 	}
 
