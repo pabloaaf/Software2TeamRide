@@ -13,7 +13,8 @@
 </ion-header>
 
 
-<ion-content padding *ngIf="showPlayer.length>0">
+<ion-content padding>
+  <h2> Los jugadores que fueron al viaje eran: </h2>
 <ion-card *ngFor="let player of showPlayer">
     <ion-item>
     <ion-avatar item-start>
@@ -25,10 +26,11 @@
   </ion-item>
 </ion-card>
 
+<h2> Los coches que se llevaron al viaje eran: </h2>
 <ion-card *ngFor="let car of showCars">
     <ion-item>
     <ion-card-title>
-        {{car.model}} ({{player.owner}})
+        {{car.model}} ({{car.owner}})
       </ion-card-title>
   </ion-item>
 </ion-card>
