@@ -49,7 +49,7 @@ export class HistoricoJugPage {
        this.http.setIdViajes(this.cars,this.jugadoresSelec);
   		 this.nav.push(PavDestPage); 
   	}
-  	else if(this.jugadoresSelec.length>6){
+  	/*else if(this.jugadoresSelec.length>6){
   		let alert = this.alert.create({
 		    title: 'Error',
 		    subTitle: 'el numero de jugadores es demasiado',
@@ -57,7 +57,7 @@ export class HistoricoJugPage {
 		  });
 		  alert.present();
 		
-  	}
+  	}*/
   	
   	
   }
