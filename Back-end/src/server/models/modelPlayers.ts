@@ -11,6 +11,7 @@ export class Player{
 	constructor(id: number)
 	constructor(id: number, name: string, nick: string, dorsal: number, team: string)
 	constructor(id: number, name: string, nick: string, dorsal: number)	
+	constructor(id: number, name: string, nick: string, dorsal: number, team: string, email: string, password: string)
 	constructor(id: number, name?: string, nick?: string, dorsal?: number, team?: string, email?: string, password?: string){
 		this.deuda = 0;
 		this.id = id;
