@@ -71,7 +71,7 @@ export class HttpProvider {
     console.log('registrer');
     const body = {email:email,password:passw,team:team,name:name,dorsal:dorsal,nick:nick};
     //necesita res.body.email, res.body.password, res.body.team, req.body.name, req.body.dorsal, req.body.nick
-    return this.http.post<players>(path + version + '/players/', body,options);
+    return this.http.post<players>(path + version + '/register/', body,options);
   }
 
   public logout() {
