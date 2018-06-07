@@ -21,9 +21,7 @@ class TeamsController {
         // teams
         router.route('/teams/')
             .get(this.infoTeams)
-            .post(this.addTeam)
-            //.put(this.updateTeam)
-            //.delete(this.deleteTeam);
+            .post(this.addTeam);
 
         return router;
     }
@@ -63,42 +61,6 @@ class TeamsController {
             }
         );
     }
-
-    /*private updateTeam (req, res, next) { //pasar nombre y un nombre nuevo para actualizarlo 
-    	//todo los jugadores del equipo lo actualizaran en cascada
-        console.log('respuesta actualizarTeamId');
-        bbdd.updateTeam(req.body.name, req.body.newName)
-        .then(
-            value => {
-                res.json(value);
-                next();
-            }
-        ).catch(
-            err => {
-                console.log('err');
-                res.send(err);
-                res.status(404).end();
-            }
-        );
-    }
-
-    private deleteTeam (req, res, next) { // pasa nombre y se borra
-    	//si el equipo tiene jugadores no se puede borrar
-        console.log('respuesta borrarTeamId');
-        bbdd.deleteTeam(req.body.name)
-        .then(
-            value => {
-                res.json(value);
-                next();
-            }
-        ).catch(
-            err => {
-                console.log('err');
-                res.send(err);
-                res.status(404).end();
-            }
-        );
-    }*/
 }
 
 export default new TeamsController().contRoutes();

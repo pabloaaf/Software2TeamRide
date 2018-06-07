@@ -1,6 +1,8 @@
 import * as express from 'express';
 import * as uuidRand from 'uuid/v4';
 import bbdd from '../bbdd';
+import promise from '../promises/promiseLogin'
+
 
 class LogRegController {
     public express;
@@ -41,28 +43,16 @@ class LogRegController {
     private login (req, res, next) {
         console.log('respuesta login');
         if(req.body.password.length >0) {
-            bbdd.login(req.body.email, req.body.password).then(
-                value => {
-                    console.log(value);
-                    if(Object.keys(value).length != 0){ //existe player
-                        let token:string = '';
-                        do {
-                            token = uuidRand();
-                        } while (!bbdd.verifyUniqueToken(token));
-                        bbdd.addToken(token);                        
-                        res.json({player:value[0],token:token});
-                    }else{
-                        res.status(404).end();
-                    }
+            promise.login(req.body.email, req.body.password).then(value => {
+                console.log(value);
+                if(value){
+                    res.json({player:value[0],token:value});
+                } else {
+                    res.status(404).json({message: "usuario o contraseña incorrecta"});
                 }
-            ).catch(
-                err => {
-                    console.log(err);
-                    //res.send('Usuario no encontrado');
-                    res.status(404).end();
-                }
-            );
-        } else{
+            });
+        } 
+        else{
             res.status(404).json({message: "contraseña incorrecta"});
         }
         
@@ -79,32 +69,14 @@ class LogRegController {
 		            bbdd.register(req.body.team, req.body.dorsal,req.body.email, req.body.password)
     		        .then(
     		            value => {
-    		                bbdd.login(req.body.email, req.body.password).then(
-                                value => {
-                                    if(Object.keys(value).length != 0){ //existe player
-                                        let token:string = '';
-                                        do {
-                                            token = uuidRand();
-                                        } while (!bbdd.verifyUniqueToken(token).then(
-                                            value => {
-                                                return value;
-                                            }
-                                        ));
-                                        bbdd.addToken(token);
-                                        res.json({player:value,token:token});
-                                    }else{
-                                        res.status(404).end();
-                                    }
+    		                promise.login(req.body.email, req.body.password).then(value => {
+                                console.log(value);
+                                if(value){
+                                    res.json({player:value[0],token:value});
+                                } else {
+                                    res.status(404).json({message: "usuario o contraseña incorrecta"});
                                 }
-                            ).catch(
-                                err => {
-                                    console.log('err');
-                                    //res.send('Usuario no encontrado');
-                                    res.status(404).end();
-                                }
-                            );
-    		                //res.json({message:'Usuario registrado'});
-    		                next();
+                            });
     		            }
     		        ).catch(
     		            err => {
@@ -117,28 +89,14 @@ class LogRegController {
                     bbdd.registerNewPlayer(req.body.email, req.body.password, req.body.team, req.body.name, req.body.dorsal, req.body.nick)
     		        .then(
     		            value => {
-                            bbdd.login(req.body.email, req.body.password).then(
-                                value => {
-                                    if(Object.keys(value).length != 0){ //existe player
-                                        let token:string = '';
-                                        do {
-                                            token = uuidRand();
-                                        } while (!bbdd.verifyUniqueToken(token));
-                                        bbdd.addToken(token);                                        
-                                        res.json({player:value,token:token});
-                                    }else{
-                                        res.status(404).end();
-                                    }
+                            promise.login(req.body.email, req.body.password).then(value => {
+                                console.log(value);
+                                if(value){
+                                    res.json({player:value[0],token:value});
+                                } else {
+                                    res.status(404).json({message: "usuario o contraseña incorrecta"});
                                 }
-                            ).catch(
-                                err => {
-                                    console.log('err');
-                                    //res.send('Usuario no encontrado');
-                                    res.status(404).end();
-                                }
-                            );    		                
-                            //res.json({message:'Usuario registrado'});
-    		                next();
+                            });
     		            }
     		        ).catch(
     		            err => {

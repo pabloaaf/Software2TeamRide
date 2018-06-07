@@ -7,4 +7,7 @@ export class cars{
 	gasPrice:number;
 	model:string;
 	seats: number;
+	constructor(){
+		
+	}
 }

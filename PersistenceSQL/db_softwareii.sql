@@ -170,7 +170,7 @@ ALTER TABLE `pavilions`
 -- Indices de la tabla `players`
 --
 ALTER TABLE `players`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`);  
 
 --
 -- Indices de la tabla `teams`
@@ -207,7 +207,7 @@ ALTER TABLE `players`
 --
 DROP TABLE IF EXISTS `historic`;
 CREATE TABLE `historic` (
-  `date` date NOT NULL,
+  `date` varchar(12) NOT NULL,
   `team` varchar(40) NOT NULL,
   `pavilionId` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -218,7 +218,7 @@ CREATE TABLE `historic` (
 --
 DROP TABLE IF EXISTS `tripCars`;
 CREATE TABLE `tripCars` (
-  `date` date NOT NULL,
+  `date` varchar(12) NOT NULL,
   `team` varchar(40) NOT NULL,
   `carId` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -228,7 +228,7 @@ CREATE TABLE `tripCars` (
 --
 DROP TABLE IF EXISTS `tripPlayers`;
 CREATE TABLE `tripPlayers` (
-  `date` date NOT NULL,
+  `date` varchar(12) NOT NULL,
   `team` varchar(40) NOT NULL,
   `playerId` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -251,6 +251,80 @@ ALTER TABLE `tripCars`
 --
 ALTER TABLE `tripPlayers`
   ADD PRIMARY KEY (`date`,`team`, `playerId`);
+
+
+
+--
+-- Restricciones
+--
+ALTER TABLE `cars` (
+  DROP CONSTRAINT team
+  ADD CONSTRAINT teamCarConst
+    FOREIGN KEY (team)
+    REFERENCES teams (name)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  DROP CONSTRAINT owner,
+  DROP CONSTRAINT ownerId,  
+  ADD CONSTRAINT playerCarConst
+    FOREIGN KEY (owner, ownerId)
+    REFERENCES players (name, id)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
+);
+
+ALTER TABLE `players`
+  ADD CONSTRAINT teamPlayerConst
+    FOREIGN KEY (team)
+    REFERENCES teams (name)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE;
+
+ALTER TABLE `pavilions`
+  ADD CONSTRAINT teamPavConst
+    FOREIGN KEY (team)
+    REFERENCES teams (name)
+    ON DELETE NO ACTION
+    ON UPDATE CASCADE;
+
+ALTER TABLE `historic`
+  ADD CONSTRAINT teamHistoricConst
+    FOREIGN KEY (team)
+    REFERENCES teams (name)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE;
+  ADD CONSTRAINT pavHistoricConst
+    FOREIGN KEY (pavilionId)
+    REFERENCES pavilions (id)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE;
+
+ALTER TABLE `tripCars`
+  ADD CONSTRAINT teamTCarsConst
+    FOREIGN KEY (team)
+    REFERENCES teams (name)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE;
+  ADD CONSTRAINT historicTCarConst
+    FOREIGN KEY (date)
+    REFERENCES historic (date)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE;
+
+ALTER TABLE `tripPlayers`
+  ADD CONSTRAINT teamTPlayersConst
+    FOREIGN KEY (team)
+    REFERENCES teams (name)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE;
+  ADD CONSTRAINT historicTPlayersConst
+    FOREIGN KEY (date)
+    REFERENCES historic (date)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE;
+
+
+
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
