@@ -1,0 +1,73 @@
+<ion-header>
+  <ion-navbar color="dark">
+    <ion-title>Register</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content class="login-content" padding>
+  <div class="login-box">
+
+    <form (ngSubmit)="register()" #registerForm="ngForm">
+      <ion-row>
+        <ion-col>
+          <ion-list>
+            <ion-item>
+              <ion-icon name="person" item-left></ion-icon>
+              <ion-label stacked>Email:</ion-label>
+              <ion-input type="text" placeholder="Email" name="email" [(ngModel)]="registerCredentials.email"
+                         required></ion-input>
+            </ion-item>
+
+            <ion-item>
+              <ion-icon name="key" item-left></ion-icon>
+              <ion-label stacked>Contraseña:</ion-label>
+              <ion-input type="password" placeholder="Password" name="password"
+                         [(ngModel)]="registerCredentials.password" required></ion-input>
+            </ion-item>
+                <!--añadidos-->
+            <ion-item>
+              <ion-icon name="person" item-left></ion-icon>
+              <ion-label stacked>Nombre:</ion-label>
+              <ion-input type="text" placeholder="Nombre" name="Nombre" [(ngModel)]="registerCredentials.name" required></ion-input>
+              </ion-item>
+            <ion-item>
+              <ion-icon name="person" item-start></ion-icon>
+              <ion-label stacked>Apodo:</ion-label>
+              <ion-input type="text" placeholder="apodo" name="apodo" [(ngModel)]="registerCredentials.nick" required></ion-input>
+            </ion-item>
+            <ion-item>
+            <ion-icon name="mail" item-start></ion-icon>
+            <ion-label stacked>Dorsal:</ion-label>
+            <ion-input type="number" placeholder="Dorsal" name="Dorsal" [(ngModel)]="registerCredentials.dorsal" required></ion-input>
+            </ion-item>
+
+            <ion-item>
+              <ion-icon name="people" item-left></ion-icon>
+              <ion-label>Equipo:</ion-label>
+              <ion-select placeholder="Select" [(ngModel)]="registerCredentials.team" name="team">
+                <ion-option value="">...</ion-option>
+                <ion-option *ngFor="let team of teams" value="{{team}}">{{team}}</ion-option>
+              </ion-select>
+            </ion-item>
+
+            <ion-item>
+              <ion-icon name="people" item-left></ion-icon>
+              <ion-label stacked> O cree un nuevo equipo:</ion-label>
+              <ion-input type="text" placeholder="team" name="team" [(ngModel)]="registerCredentials.team" required>
+                {{registerCredentials.team}}
+              </ion-input>
+            </ion-item>
+          </ion-list>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col class="signup-col">
+          <button ion-button class="submit-btn" full type="submit" [disabled]="!registerForm.form.valid">Register
+          </button>
+        </ion-col>
+      </ion-row>
+
+    </form>
+  </div>
+</ion-content>

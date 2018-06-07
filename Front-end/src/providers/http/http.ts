@@ -74,6 +74,11 @@ export class HttpProvider {
     return this.http.post<players>(path + version + '/players/', body,options);
   }
 
+  public logout() {
+    this.playerAct = new players(0);
+    this.token = "";
+  }
+
   //funciones Team////////////////////////////////////
   public getAllTeams(): Observable<teams[]> {
     console.log('getAllTeams');
@@ -123,7 +128,7 @@ export class HttpProvider {
   public deleteCar(carId: number){
     //necesita ID del coche.
     console.log('deleteCar');
-    return this.http.delete(path + version + '/teams/' + carId, options);
+    return this.http.delete(path + version + '/cars/' + carId, options);
   }
 
   //funciones usuarios.///////////////////////////////////
@@ -179,10 +184,9 @@ export class HttpProvider {
 
   //funciones histotic/////////////////////////////////////////////////
   public addHistorico(pavilion:number){
-
     //console.log("manda la peticion con:" + this.idcoches + " " + this.idJugadores + " " + pavilion);
     const body = {pavilionId: pavilion,idCars:this.idcoches,idPlayers:this.idJugadores};
-    return this.http.post(path + version + '/hitoric/' + this.playerAct.team, body, options);
+    return this.http.post(path + version + '/historic/' + this.playerAct.team, body, options);
   }
   public infoTripCars(date:string){
     return this.http.get<tripCars[]>(path + version + '/tripCars/' + this.playerAct.team + "/" + date, options);

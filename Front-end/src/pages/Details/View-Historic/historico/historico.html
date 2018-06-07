@@ -1,0 +1,25 @@
+<ion-header>
+
+</ion-header>
+
+<ion-content padding>
+<ion-card *ngFor="let hist of historic">
+  <ion-item>
+    <ion-avatar item-start>
+      <ion-icon name="locate" item-start large></ion-icon>
+    </ion-avatar>
+    <ion-card-title>{{hist.date}}</ion-card-title>
+    <p>Direccion {{hist.pavilionId}}
+  </ion-item>
+    <ion-row no-padding>
+      <ion-col text-center>
+        <button ion-button clear small color="energized" (click)="verDetalles(hist.date)" icon-start>
+          <ion-icon name="create"></ion-icon>
+          Ver Detalles
+        </button>
+      </ion-col>
+</ion-row>
+</ion-card>
+</ion-content>
+
+<!-- -->
