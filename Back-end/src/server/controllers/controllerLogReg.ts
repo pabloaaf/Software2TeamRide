@@ -43,10 +43,12 @@ class LogRegController {
     private login (req, res, next) {
         console.log('respuesta login');
         if(req.body.password.length >0) {
-            promise.login(req.body.email, req.body.password).then(value => {
-                console.log(value);
-                if(value){
-                    res.json({player:value[0],token:value});
+            promise.login(req.body.email, req.body.password).then(player => {
+                console.log(player);
+                if(player){
+                    promise.generateToken().then(token => {
+                        res.json({player:player,token:token});
+                    });
                 } else {
                     res.status(404).json({message: "usuario o contraseña incorrecta"});
                 }

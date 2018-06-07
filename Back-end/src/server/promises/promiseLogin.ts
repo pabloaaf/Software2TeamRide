@@ -13,24 +13,30 @@ class LogRegController {
                 value => {
                     console.log(value);
                     if(Object.keys(value).length != 0){ //existe player
-                        let token:string = '';
-                        do {
-                            token = uuidRand();
-                        } while (!bbdd.verifyUniqueToken(token));
-                        bbdd.addToken(token);
-                        resolve(token);
+                        resolve(value[0]);
                     }else{
-                        resolve("");
+                        resolve(null);
                     }
                 }
             ).catch(
                 err => {
                     console.log(err);
                     //res.send('Usuario no encontrado');
-                    resolve("");
+                    resolve(null);
                 }
             );
         }); 
+    }
+
+    public generateToken() {
+        return new Promise((resolve, reject) => {
+            let token:string = '';
+            do {
+                token = uuidRand();
+            } while (!bbdd.verifyUniqueToken(token));
+            bbdd.addToken(token);
+            resolve(token);
+        });    
     }
 }
 export default new LogRegController();
