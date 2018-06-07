@@ -1,5 +1,10 @@
-// npm install mysql
 import * as mysql from 'mysql';
+import {cars} from './models/modelCars';
+import {historic} from './models/modelHistoric';
+import {register} from './models/modelLogReg';
+import {pavilions} from './models/modelPavilions';
+import {players} from './models/modelPlayers';
+import {teams} from './models/modelTeams';
 
 class bbdd {
 	private conexion;
@@ -16,11 +21,21 @@ class bbdd {
 				function (err, result) {
 					if (err) return reject(err);
 					console.log(result);
-					if(result == "") {
+					if(result.length == 0 ) {
 						resolve(true);
 					} else {
 						resolve(false);
 					}
+				});
+		});
+	}
+
+	public addToken(token:string) {//agregar token
+		return new Promise((resolve, reject) => {
+			this.conexion.query('INSERT INTO tokens (token) VALUES (\''+ token +'\');', 
+				function (err, result) {
+					if (err) return reject(err);
+					resolve(result);
 				});
 		});
 	}
@@ -76,7 +91,7 @@ class bbdd {
 
 	public registerNewPlayer(email:string, password:string, team:string, name:string, dorsal:number, nick:string) {//crear nuevo player
 		return new Promise((resolve, reject) => {
-			this.conexion.query('INSERT INTO players (team, name, nick, debt, email, password) VALUES (\''+ team +'\', \''+ name +'\', \''+ nick +'\', \'0\', \''+ email +'\', \''+ password +'\');', 
+			this.conexion.query('INSERT INTO players (team, name, nick, debt, email, password) VALUES (\''+ team +'\', \''+ name +'\', \''+ nick +'\', \''+ dorsal +'\', \'0\', \''+ email +'\', \''+ password +'\');', 
 				function (err, result) {
 					if (err) return reject(err);
 					resolve(result);
@@ -117,7 +132,7 @@ class bbdd {
 		});
 	}
 
-	public updateTeam(oldName: string, newName: string) {
+	/*public updateTeam(oldName: string, newName: string) {
 		return new Promise((resolve, reject) => {
 			this.conexion.query('UPDATE teams SET name=\''+ newName +'\' WHERE name=\''+oldName+'\';',
 				function (err, result) {
@@ -125,17 +140,7 @@ class bbdd {
 					resolve(result);
 				});
 		});
-	}
-
-	public deleteTeam(name: string) { 
-		return new Promise((resolve, reject) => {
-			this.conexion.query('DELETE FROM teams WHERE id=\''+name+'\';',
-				function (err, result) {
-					if (err) return reject(err);
-					resolve(result);
-				});
-		});
-	}
+	}*/
 
 	//+++++++++++++++  CARS  ++++++++++++++++++
 
@@ -149,10 +154,9 @@ class bbdd {
 		});
 	}
 
-	public addCar(team: string, owner: string, ownerId: number, spendingGas: string,gasPrice:string, model: string, seats:number) {
-		console.log(name);
+	public addCar(ownerId: number, owner: string, team: string, spendingGas: string, gasPrice:string, model: string, seats:number) {
 		return new Promise((resolve, reject) => {
-			this.conexion.query('INSERT INTO cars (team, owner, ownerId, spendingGas,gasPrice, model, seats) VALUES (\''+ team +'\', \''+ owner +'\', \''+ ownerId +'\', \''+ spendingGas +'\', \''+gasPrice+'\', \''+ model +'\', \''+seats+'\');',
+			this.conexion.query('INSERT INTO cars (ownerId, owner, team, spendingGas,gasPrice, model, seats) VALUES (\''+ ownerId +'\', \''+ owner +'\', \''+ team +'\', \''+ spendingGas +'\', \''+gasPrice+'\', \''+ model +'\', \''+seats+'\');',
 				(err, result) => {
 					if (err) reject(err);
 					resolve(result);
@@ -162,7 +166,7 @@ class bbdd {
 
 	public updateCarId(id: number, spendingGas:number, gasPrice:string, model:string, seats:string) {
 		return new Promise((resolve, reject) => {
-			this.conexion.query('UPDATE cars SET spendingGas=\''+spendingGas+'\', gasPrice=\''+gasPrice+'\', model=\''+model+'\', seats=\''+seats+'\' WHERE id = \''+id+'\';', 
+			this.conexion.query('UPDATE cars SET spendingGas=\''+spendingGas+'\', gasPrice=\''+gasPrice+'\', model=\''+model+'\', seats=\''+seats+'\' WHERE id = '+id+';', 
 				function (err, result) {
 					if (err) return reject(err);
 					resolve(result);
@@ -205,10 +209,10 @@ class bbdd {
 		});
 	}
 
-	public addPlayer(team: string, name: string, dorsal: number, nick: string) { //agregar un jugador, que no esta registrado
+	public addPlayer(team: string, name: string, nick: string, dorsal: number) { //agregar un jugador, que no esta registrado
 		console.log(name);
 		return new Promise((resolve, reject) => {
-			this.conexion.query('INSERT INTO players (team, name, nick, debt) VALUES (\''+ team +'\', \''+ name +'\', \''+ nick +'\', \'0\');',
+			this.conexion.query('INSERT INTO players (team, name, nick, dorsal, debt) VALUES (\''+ team +'\', \''+ name +'\', \''+ nick +'\', \''+ dorsal +'\', \'0\');',
 				(err, result) => {
 					if (err) reject(err);
 					resolve(result);
@@ -218,7 +222,7 @@ class bbdd {
 
 	public updatePlayer(id: number, name: string, dorsal: number, nick: string) {
 		return new Promise((resolve, reject) => {
-			this.conexion.query('UPDATE players SET name=\''+name+'\', dorsal=\''+dorsal+'\'nick=\''+nick+'\' WHERE id = \''+id+'\';',
+			this.conexion.query('UPDATE players SET name=\''+name+'\', dorsal='+dorsal+', nick=\''+nick+'\' WHERE id = '+id+';',
 				function (err, result) {
 					if (err) return reject(err);
 					resolve(result);
@@ -262,7 +266,7 @@ class bbdd {
 	public addPavilion(team: string, pavilion: string, distance: number) {
 		console.log(pavilion);
 		return new Promise((resolve, reject) => {
-			this.conexion.query('INSERT INTO pavilions (team, pavilion, distance) VALUES (\''+ team +'\', \''+ pavilion +'\', \''+ distance +'\' );', 
+			this.conexion.query('INSERT INTO pavilions (team, pavilion, distance) VALUES (\''+ team +'\', \''+ pavilion +'\', \''+ distance +'\');', 
 				(err, result) => {
 					if (err) reject(err);
 					resolve(result);
@@ -290,6 +294,16 @@ class bbdd {
 		});
 	}
 
+	public getPavilionDistance(pavilionId:number, team:string){
+		return new Promise((resolve, reject) => {
+			this.conexion.query('SELECT distance FROM pavilions WHERE id= \''+ pavilionId +'\' AND team= \''+ team +'\';',
+				function (err, result) {
+					if (err) return reject(err);
+					resolve(result);
+				});
+		});
+	}
+
 	//+++++++++++++++  CERRAR  ++++++++++++++++++
 
 	private close() {
@@ -304,14 +318,11 @@ class bbdd {
 
 	//+++++++++++++++  HISTORIC  ++++++++++++++++++
 
-<<<<<<< HEAD
 
-	public addHistoric(team:string, pavilion:string, date:string) {
-=======
-	public getHistoric(team:string) {
+	public addHistoric(team:string, pavilionId:string, date:string) {
 		return new Promise((resolve, reject) => {
 			if(team == "") return reject("No se especifica el equipo");
-			this.conexion.query('SELECT * FROM players WHERE team= \''+team+'\';',
+			this.conexion.query('INSERT INTO historic (date, team, pavilionId) VALUES (\''+ date +'\', \''+ team +'\', \''+ pavilionId +'\' );',
 				function (err, result) {
 					if (err) return reject(err);
 					resolve(result);
@@ -319,41 +330,18 @@ class bbdd {
 		});
 	}
 
-	public addHistoric(team:string, pavilion:string, date:string) {
+	public addTripCar(date:string, team:string, carId:number) {
 		return new Promise((resolve, reject) => {
-			if(team == "") return reject("No se especifica el equipo");
-			this.conexion.query('INSERT INTO historic (date, team, pavilion) VALUES (\''+ date +'\', \''+ team +'\', \''+ pavilion +'\' );',
+				this.conexion.query('INSERT INTO tripCars (date, team, carId) VALUES (\''+ date +'\', \''+ team +'\', \''+ carId +'\');',
 				function (err, result) {
 					if (err) return reject(err);
 					resolve(result);
 				});
 		});
 	}
-
-	public getTrip(team:string) {
->>>>>>> 7d320e018458c01eb4660b64c65ad1e80b77d45c
+	public addTripPlayer(date:string, team:string, playerId:number) {
 		return new Promise((resolve, reject) => {
-			if(team == "") return reject("No se especifica el equipo");
-			this.conexion.query('INSERT INTO historic (date, team, pavilion) VALUES (\''+ date +'\', \''+ team +'\', \''+ pavilion +'\' );',
-				function (err, result) {
-					if (err) return reject(err);
-					resolve(result);
-				});
-		});
-	}
-
-	public addTripCar(date:string, carId:number) {
-		return new Promise((resolve, reject) => {
-				this.conexion.query('INSERT INTO tripCars (date, carId, playerId) VALUES (\''+ date +'\', \''+ carId +'\');',
-				function (err, result) {
-					if (err) return reject(err);
-					resolve(result);
-				});
-		});
-	}
-	public addTripPlayer(date:string, playerId:number) {
-		return new Promise((resolve, reject) => {
-				this.conexion.query('INSERT INTO tripPlayers (date, carId, playerId) VALUES (\''+ date +'\', \''+ playerId +'\');',
+				this.conexion.query('INSERT INTO tripPlayers (date, team, playerId) VALUES (\''+ date +'\', \''+ team +'\', \''+ playerId +'\');',
 				function (err, result) {
 					if (err) return reject(err);
 					resolve(result);
@@ -362,10 +350,10 @@ class bbdd {
 	}
 
 	
-	public getHistoric(team:string) {
+	public getHistoric(team:string, numData:number) {
 		return new Promise((resolve, reject) => {
 			if(team == "") return reject("No se especifica el equipo");
-			this.conexion.query('SELECT * FROM historic WHERE team= \''+team+'\';',
+			this.conexion.query('SELECT * FROM historic WHERE team = \''+team+'\' ORDER BY date DESC LIMIT '+numData+';',
 				function (err, result) {
 					if (err) return reject(err);
 					resolve(result);
@@ -376,7 +364,7 @@ class bbdd {
 	public getTripCars(team:string, date:string) {
 		return new Promise((resolve, reject) => {
 			if(team == "" || date == "" ) return reject("No se especifica el equipo o la fecha");
-			this.conexion.query('SELECT * FROM tripCars WHERE team= \''+team+'\' AND date="'+date+'" ORDERED BY date DESC;',
+			this.conexion.query('SELECT * FROM tripCars WHERE team = \''+team+'\' AND date="'+date+'";',
 				function (err, result) {
 					if (err) return reject(err);
 					resolve(result);
@@ -387,7 +375,7 @@ class bbdd {
 	public getTripPlayers(team:string, date:string) {
 		return new Promise((resolve, reject) => {
 			if(team == "" || date == "" ) return reject("No se especifica el equipo o la fecha");
-			this.conexion.query('SELECT * FROM tripPlayers WHERE team= \''+team+'\' AND date="'+date+'";',
+			this.conexion.query('SELECT * FROM tripPlayers WHERE team = \''+team+'\' AND date="'+date+'";',
 				function (err, result) {
 					if (err) return reject(err);
 					resolve(result);
@@ -395,39 +383,6 @@ class bbdd {
 		});
 	}
 
-
-	//++++++++++++++++ DEBT +++++++++++++++++++
-	
-	public updatePlayerDebt(playerId:number, debt:number){
-		return new Promise((resolve, reject) => {
-			this.conexion.query('UPDATE FROM playerts SET debt = "'+debt+'" WHERE id= \''+playerId+'\';',
-				function (err, result) {
-					if (err) return reject(err);
-					resolve(result);
-				});
-		});
-	}
-
-	public getPlayerDebt(playerId:number){
-		return new Promise((resolve, reject) => {
-			this.conexion.query('SELECT debt FROM players WHERE id= \''+playerId+'\';',
-				function (err, result) {
-					if (err) return reject(err);
-					resolve(result);
-				});
-		});
-	}
-
-	public addTrip(date:string, carId:number, playerId:number) {
-		return new Promise((resolve, reject) => {
-				this.conexion.query('INSERT INTO trips (date, carId, playerId) VALUES (\''+ date +'\', \''+ carId +'\', \''+ playerId +'\' );',
-				function (err, result) {
-					if (err) return reject(err);
-					resolve(result);
-				});
-		});
-	}
-	
 
 	//++++++++++++++++ DEBT +++++++++++++++++++
 	
