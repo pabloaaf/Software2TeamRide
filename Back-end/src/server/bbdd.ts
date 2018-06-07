@@ -69,9 +69,9 @@ class bbdd {
 		});
 	}
 
-	public checkRegisterPlayer(team:string, dorsal:number) {
+	public checkRegisterPlayer(player:Player) {
 		return new Promise((resolve, reject) => {
-			this.conexion.query('SELECT * FROM players WHERE team = "'+team+'" AND dorsal = '+dorsal+'";',
+			this.conexion.query('SELECT * FROM players WHERE team = "'+player.team+'" AND dorsal = "'+player.dorsal+'";',
 				function (err, result) {
 					if (result == null || err) return reject(err); //devuelve que existe el jugador
 					resolve(result); //devuelve que se query resulto vacia
@@ -79,9 +79,9 @@ class bbdd {
 		});
 	}
 
-	public register(team:string, dorsal:number, email:string, password:string) {//update jugador existente
+	public register(player:Player) {//update jugador existente
 		return new Promise((resolve, reject) => {
-			this.conexion.query('UPDATE players SET email = "'+email+'", password = "'+password+'" WHERE team = "'+team+'" AND dorsal = '+dorsal+'";',
+			this.conexion.query('UPDATE players SET email = "'+player.email+'", password = "'+player.password+'" WHERE team = "'+player.team+'" AND dorsal = '+player.dorsal+'";',
 				function (err, result) {
 					if (err) return reject(err);
 					resolve(result);
@@ -89,9 +89,9 @@ class bbdd {
 		});
 	}
 
-	public registerNewPlayer(email:string, password:string, team:string, name:string, dorsal:number, nick:string) {//crear nuevo player
+	public registerNewPlayer(player:Player) {//crear nuevo player
 		return new Promise((resolve, reject) => {
-			this.conexion.query('INSERT INTO players (team, name, nick, debt, email, password) VALUES (\''+ team +'\', \''+ name +'\', \''+ nick +'\', \''+ dorsal +'\', \'0\', \''+ email +'\', \''+ password +'\');', 
+			this.conexion.query('INSERT INTO players (team, name, nick, dorsal, debt, email, password) VALUES (\''+ player.team +'\', \''+ player.name +'\', \''+ player.nick +'\', \''+ player.dorsal +'\', \'0\', \''+ player.email +'\', \''+ player.password +'\');', 
 				function (err, result) {
 					if (err) return reject(err);
 					resolve(result);
