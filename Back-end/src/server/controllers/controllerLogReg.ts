@@ -42,7 +42,7 @@ class LogRegController {
     //login *************************************************
     private login (req, res, next) {
         console.log('respuesta login');
-        if(req.body.password.length >0) {
+        if(req.body.password.length > 4) {
             promise.login(req.body.email, req.body.password).then(player => {
                 console.log(player);
                 if(player){
