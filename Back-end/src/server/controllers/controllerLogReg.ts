@@ -2,6 +2,7 @@ import * as express from 'express';
 import * as uuidRand from 'uuid/v4';
 import bbdd from '../bbdd';
 import promise from '../promises/promiseLogin'
+import { Player } from '../models/modelPlayers';
 
 
 class LogRegController {
@@ -64,11 +65,13 @@ class LogRegController {
     private register (req, res, next) {
         console.log('respuesta register');
         //devolver jugador que se ha registrado y la cookie
-        bbdd.checkRegisterPlayer(req.body.team, req.body.dorsal)
+        let player = new Player(0, req.body.name,req.body.nick, req.body.dorsal, req.body.team,req.body.email, req.body.password);
+        bbdd.checkRegisterPlayer(player)
         .then(
             value => {
+                console.log(value);
                 if(!value){ //Hay player, hacer update
-		            bbdd.register(req.body.team, req.body.dorsal,req.body.email, req.body.password)
+		            bbdd.register(player)
     		        .then(
     		            value => {
     		                promise.login(req.body.email, req.body.password).then(value => {
@@ -88,7 +91,7 @@ class LogRegController {
     		            }
     		        );
                 } else {//vacío, haccer insert
-                    bbdd.registerNewPlayer(req.body.email, req.body.password, req.body.team, req.body.name, req.body.dorsal, req.body.nick)
+                    bbdd.registerNewPlayer(player)
     		        .then(
     		            value => {
                             promise.login(req.body.email, req.body.password).then(value => {
