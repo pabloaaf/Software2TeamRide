@@ -1,5 +1,6 @@
 import * as express from 'express';
 import bbdd from '../bbdd';
+import {Player} from '../models/modelPlayers';
 
 class PlayersController {
     public express;
@@ -51,7 +52,9 @@ class PlayersController {
 
     private addPlayer (req, res, next) {
         console.log('respuesta addPlayer con ' + req.params.team_name);
-        bbdd.addPlayer(req.params.team_name, req.body.name, req.body.nick, req.body.dorsal)
+        let player = new Player(0, req.body.name, req.body.nick, req.body.dorsal, req.params.team_name)
+        //bbdd.addPlayer(req.params.team_name, req.body.name, req.body.nick, req.body.dorsal)
+        bbdd.addPlayer(player)
         .then(
             value => {
                 res.json(value);
@@ -68,7 +71,9 @@ class PlayersController {
 
     private updatePlayerId (req, res, next) {
         console.log('respuesta updatePlayerId');
-        bbdd.updatePlayer(req.params.players_id, req.body.name, req.body.dorsal, req.body.nick)
+        let player = new Player(req.params.players_id, req.body.name, req.body.nick, req.body.dorsal)
+        //bbdd.updatePlayer(req.params.players_id, req.body.name, req.body.dorsal, req.body.nick)
+        bbdd.updatePlayer(player)
         .then(
             value => {
                 res.json(value);
@@ -85,7 +90,9 @@ class PlayersController {
 
     private deletePlayerId (req, res, next) {
         console.log('respuesta deletePlayerId');
-        bbdd.deletePlayer(req.params.players_id)
+        let player = new Player(req.params.players_id)        
+        //bbdd.deletePlayer(req.params.players_id)
+        bbdd.deletePlayer(player)
         .then(
             value => {
                 res.json(value);

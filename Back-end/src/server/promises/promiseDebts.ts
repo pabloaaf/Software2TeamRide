@@ -1,107 +1,95 @@
 import bbdd from '../bbdd';
 
 class PromisesDebt {
-    public getPlayerDebt (playerId:number){ //ToDo
-        console.log('respuesta updatePlayerDebtId');
-        return bbdd.getPlayerDebt(playerId)
-        .then(
-            value => {
-                let result:number = value['debt'];
-                return result;
+    public calculateDebt( distance:number, cars:Array<number>, players:Array<number>):Promise<Array<number>>{
+        return new Promise((resolve, reject) => {
+            let result:Array<number> = []; //0-total, resto-parciales
+            result.push(0);
+            let promises:Array<Promise<any>> = [];
+            for (let i = 0; i < cars.length; i++) {     
+                promises.push(bbdd.getInfoCarId(cars[i]));
             }
-        ).catch(
-            err => {
-                return null;
-            }
-        );
-    }
-	    //Promesas para calcular las deudas
-    public promiseUpdateDriversDebts(car:number, debt:number){
-        
-        return bbdd.getInfoCarId(car)
-        .then(
-            value => {
-                bbdd.updatePlayerDebt(value['ownerId'], debt) //actualizar las dedudas de los conductores
-                .then(
-                    value => {
-                        console.log("actualización de la deuda de conductores correctamente.");
-                        
-                    }
-                ).catch(
-                    err =>{
-                        return null;
-                    }
-                );
-            }
-        );
-    }
-
-    public promiseUpdatePlayersDebt(player:number, debt:number){
-        return bbdd.updatePlayerDebt(player, debt) //actualizar las dedudas de los jugadores
-        .then(
-            value => {
-                console.log("actualización de la deuda de jugadores correctamente.");
-            }
-        ).catch(
-            err =>{
-                return null;
-            }
-        );
-    }
-
-    public calculateDebt( distance:number, cars:Array<number>, players:Array<number>):Array<number>{
-        let result = new Array(cars.length + 1); //0-total, resto-parciales
-        let i = 0;
-        let totalSpend = 0;
-
-        let promises:Array<Promise<any>> = [];
-        for (let i = 0; i < cars.length; i++) {     
-            promises.push(this.promiseCalculateDebt(cars[i], distance));
-        }
-
-        Promise.all(promises)
-        .then(
-            value => {
-                console.log(value);
-            }
-        );
-        /*
-        //llamadas a la bbdd para sacar los datos de los coches
-        for(let i = 0; i < cars.length; i++){
-            bbdd.getInfoCarId(cars[i])
+    
+            Promise.all(promises)
             .then(
-                value => {     
-                    //let partialSpend = ((distance*2)*value['spendingGas']*value['gasPrice'])/100;
-                    totalSpend += partialSpend;    
-                    result[i+1] = partialSpend;
-
+                value => {
+                    let i = 0;
+                    for (let object of value){
+                        let gastoParcial:number = ((distance*2)*object[0].spendingGas*object[0].gasPrice)/100; 
+                        result.push(gastoParcial);
+                        result[0] += gastoParcial;
+                        i++;
+                    }
+                    resolve(result);
                 }
             ).catch(
                 err => {
-                    return null; //hay errores
+                    reject(err);
+                }
+                    
+            );
+    
+		});
+    }
+
+    public promiseUpdate (team:string, cars:Array<number>, players:Array<number>, value:Array<number>):Promise<Array<Promise<any>>>{
+        let promisesUpdateDebt:Array<Promise<any>> = [];        
+        return new Promise((resolve, reject) => {
+            let totalSpend = value[0];
+            let partialSpend: Array<number> = [];
+            let aux = 0;
+            for (let v of value) {
+                if (aux != 0){
+                    partialSpend.push(v);
+                }
+                aux++;
+            }
+
+            let promisesGetDriver:Array<Promise<any>> = [];
+            for (let i = 0; i < cars.length; i++) {   
+                promisesGetDriver.push(bbdd.getInfoCarId(cars[i]));
+            }
+            Promise.all(promisesGetDriver)
+            .then(
+                drivers => {
+                    
+                    let promisesDriverDebts:Array<Promise<any>> = [];                
+                    for (let d of drivers) {  
+                        promisesDriverDebts.push(bbdd.getPlayerDebt(d[0].ownerId));
+                    }
+
+                    Promise.all(promisesDriverDebts)
+                    .then(
+                        debtDrivers => {          
+                            let aux = 0;                  
+                            for (let d of debtDrivers) {  
+                                promisesUpdateDebt.push(bbdd.updatePlayerDebt(d[0].id,d[0].debt + partialSpend[aux]));
+                                aux++; 
+                            } 
+                            let payment =totalSpend/players.length;
+                            let promisesPlayersDebts:Array<Promise<any>> = [];       
+                            for (let i = 0; i < players.length; i++) {   
+                                promisesPlayersDebts.push(bbdd.getPlayerDebt(players[i]));
+                            }
+
+                            Promise.all(promisesPlayersDebts)
+                            .then(
+                                debtPlayers => {                             
+                                    for (let d of debtPlayers) {  
+                                        promisesUpdateDebt.push(bbdd.updatePlayerDebt(d[0].id, d[0].debt - payment)); 
+                                    } 
+
+                                    resolve(promisesUpdateDebt);
+                                }
+                            );
+                        }
+                    )
                 }
             );
-        }
-        result[0] = totalSpend;
-        */
-        return result;
-        
-    }
 
-    public promiseCalculateDebt(car:number, distance:number){
-      
-        return bbdd.getInfoCarId(car)
-        .then(
-            value => {     
-            }
-        ).catch(
-            err => {
-                return null; //hay errores
-            }
-        );
+        });
     }
 }
-
 
 const promis = new PromisesDebt();
 
@@ -111,37 +99,21 @@ class Debt {
     }
 //+++++++++++++++++++ DEBTS +++++++++++++++++++++
 
-
-    public updatePlayerDebt (pavilionId:number, team:string, cars:Array<number>, players:Array<number>) { //ToDo
+    public updatePlayerDebt (distance:number, team:string, cars:Array<number>, players:Array<number>) { 
         console.log('respuesta updatePlayerDebt');        
         // new promise ?
-        bbdd.getPavilionDistance(pavilionId, team)
+
+        promis.calculateDebt(distance, cars, players)
         .then(
             value => {
-                let promises:Array<Promise<any>> = [];
-
-                let debts = promis.calculateDebt(value['distance'], cars, players); //pagos parciales de los conductores y en el 0 el total
-                if (debts == null){
-                    return null; //hay error
-                }
-
-                for (let i = 0; i < cars.length; i++) {   
-                    let oldDebt = promis.getPlayerDebt(value['ownerId']);     
-                    promises.push(promis.promiseUpdateDriversDebts(cars[i],oldDebt['debt']+ debts[i+1]));
-                }
-
-                let payment = debts[0]/players.length;
-                for (let i = 0; i < players.length; i++) {
-                    let oldDebt = promis.getPlayerDebt(players[i]);            
-                    promises.push(promis.promiseUpdatePlayersDebt(players[i], oldDebt['debt']+payment));
-                } 
-                Promise.all(promises)
+                promis.promiseUpdate(team, cars, players, value)
                 .then(
                     value => {
                         console.log("todo hecho papu");
                         //se supone que termina todo, responer con result("FUNCIONA");?
                     }
                 )
+
             }
         );
     }

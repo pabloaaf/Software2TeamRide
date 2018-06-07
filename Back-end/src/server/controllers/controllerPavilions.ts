@@ -1,5 +1,6 @@
 import * as express from 'express';
 import bbdd from '../bbdd';
+import {Pavilion} from '../models/modelPavilions';
 
 class PavilionsController {
     public express;
@@ -51,7 +52,9 @@ class PavilionsController {
 
     private addPavilionTeam (req, res, next) { //añadir un pabellon
         console.log('respuesta addPavilionTeam');
-        bbdd.addPavilion(req.params.team_name, req.body.pavilion, req.body.distance)
+        let pavilion = new Pavilion(0, req.body.pavilion, req.body.distance, req.params.team_name);
+        //bbdd.addPavilion(req.params.team_name, req.body.pavilion, req.body.distance)
+        bbdd.addPavilion(pavilion)
         .then(
             value => {
                 res.json(value);
@@ -68,7 +71,9 @@ class PavilionsController {
 
     private updatePavilion (req, res, next) {
         console.log('respuesta updatePavilion');
-        bbdd.updatePavilion(req.params.pav_id, req.body.pavilion, req.body.distance)
+        let pavilion = new Pavilion(req.params.pav_id, req.body.pavilion, req.body.distance);        
+        //bbdd.updatePavilion(req.params.pav_id, req.body.pavilion, req.body.distance)
+        bbdd.updatePavilion(pavilion)
         .then(
             value => {
                 res.json(value);
@@ -85,7 +90,9 @@ class PavilionsController {
 
     private deletePavilion (req, res, next) {
         console.log('respuesta deletePavilion');
-        bbdd.deletePavilion(req.params.pav_id)
+        let pavilion = new Pavilion(req.params.pav_id);        
+        //bbdd.deletePavilion(req.params.pav_id)
+        bbdd.deletePavilion(pavilion)
         .then(
             value => {
                 res.json(value);

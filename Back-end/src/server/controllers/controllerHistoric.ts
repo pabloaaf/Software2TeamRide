@@ -2,6 +2,7 @@ import * as express from 'express';
 import * as moment from 'moment';
 import bbdd from '../bbdd';
 import promise from '../promises/promiseDebts';
+import {TripCars, TripPlayers, Historic} from '../models/modelHistoric';
 
 class HistoricController {
     public express;
@@ -42,7 +43,11 @@ class HistoricController {
 
     private getHistoric (req, res, next) {
         console.log('respuesta getHistoric con ' + req.params.team_name);
-        bbdd.getHistoric(req.params.team_name, req.params.numData)
+
+        let historic = new Historic(req.params.team_name);
+        
+        //bbdd.getHistoric(req.params.team_name, req.params.numData)
+        bbdd.getHistoric(historic, req.params.numData)
         .then(
             value => {
                 console.log(value);
@@ -60,7 +65,10 @@ class HistoricController {
 
     private getTripCars(req, res, next){
         console.log('respuesta tripCars con ' + req.params.team_name + " en " + req.params.date);
-        bbdd.getTripCars(req.params.team_name, req.params.date)
+
+        let tripCar = new TripCars(req.params.team_name,  req.params.date);        
+        //bbdd.getTripCars(req.params.team_name, req.params.date)
+        bbdd.getTripCars(tripCar)
         .then(
             value => {
                 res.json(value);
@@ -77,7 +85,9 @@ class HistoricController {
 
     private getTripPlayers(req, res, next){
         console.log('respuesta tripPlayers con ' + req.params.team_name + " en " + req.params.date);
-        bbdd.getTripPlayers(req.params.team_name, req.params.date)
+        let tripPlayer = new TripPlayers(req.params.team_name,  req.params.date);        
+        //bbdd.getTripCars(req.params.team_name, req.params.date)
+        bbdd.getTripPlayers(tripPlayer)
         .then(
             value => {
                 res.json(value);
@@ -95,24 +105,33 @@ class HistoricController {
     private addHistoric (req, res, next) { 
         console.log('respuesta addHistoric con ' + req.params.team_name);
         let date:string = moment().format("YYYY-MM-DD");
-        bbdd.addHistoric(req.params.team_name, req.body.pavilionId, date)
+        let historic = new Historic(req.params.team_name, date, req.body.pavilionId);
+
+        //bbdd.addHistoric(req.params.team_name, req.body.pavilionId, date)
+        bbdd.addHistoric(historic)        
         .then(
             value => {
 
                 let promises:Array<Promise<any>> = [];
                 
                 for (let i = 0; i < req.body.idCars.length; i++) {     
-                    promises.push(bbdd.addTripCar(date, req.params.team_name, req.body.idCars[i]));
+                    let tripCar = new TripCars(req.params.team_name, req.params.date, req.body.idCars[i]);        
+                    //promises.push(bbdd.addTripCar(date, req.params.team_name, req.body.idCars[i]));
+                    promises.push(bbdd.addTripCar(tripCar));
+                    
                 }
 
-                for (let i = 0; i < req.body.idPlayers.length; i++) {
-                    promises.push(bbdd.addTripPlayer(date, req.params.team_name, req.body.idPlayers[i]));
+                for (let i = 0; i < req.body.idPlayers.length; i++) {    
+                    
+                    let tripPlayer = new TripPlayers(req.params.team_name,  req.params.date, req.body.idPlayers[i]);        
+                    //promises.push(bbdd.addTripCar(date, req.params.team_name, req.body.idCars[i]));
+                    promises.push(bbdd.addTripPlayer(tripPlayer));
                 } 
                 Promise.all(promises)
                 .then(
                     value => {
-                        console.log("todo hecho papu");
-                        promise.updatePlayerDebt(req.body.pavilionId, req.params.teams, req.body.cars, req.body.players)
+                        console.log("historic added");
+                        promise.updatePlayerDebt(req.body.pavilionId, req.params.teams, req.body.idCars, req.body.idPlayers);
                         /*.then( value => {
                             res.status(200).end();
                         });*/     

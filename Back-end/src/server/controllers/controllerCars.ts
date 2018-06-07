@@ -1,5 +1,7 @@
 import * as express from 'express';
 import bbdd from '../bbdd';
+import {Car} from '../models/modelCars';
+
 
 class CarsController {
     public express;
@@ -52,7 +54,10 @@ class CarsController {
     private addCar (req, res, next) { //añadir coche a team
         console.log('respuesta addCar');
 
-        bbdd.addCar(req.body.ownerId, req.body.owner, req.params.team_name, req.body.spendingGas, req.body.gasPrice, req.body.model, req.body.seats)
+        let car = new Car(0, req.body.spendingGas, req.body.gasPrice, req.body.model, req.body.seats, req.body.ownerId, req.body.owner, req.params.team_name);
+
+        //bbdd.addCar(req.body.ownerId, req.body.owner, req.params.team_name, req.body.spendingGas, req.body.gasPrice, req.body.model, req.body.seats)
+        bbdd.addCar(car)
         .then(
             value => {
                 res.json(value);
@@ -69,7 +74,9 @@ class CarsController {
 
     private updateCarId (req, res, next) {
         console.log('respuesta updateCarId');
-        bbdd.updateCarId(req.params.cars_id, req.body.spendingGas, req.body.gasPrice, req.body.model, req.body.seats) //controlar que los tres parametros existan
+        let car = new Car(req.params.cars_id, req.body.spendingGas, req.body.gasPrice, req.body.model, req.body.seats);
+        //bbdd.updateCarId(req.params.cars_id, req.body.spendingGas, req.body.gasPrice, req.body.model, req.body.seats) //controlar que los tres parametros existan
+        bbdd.updateCarId(car)
         .then(
             value => {
                 res.json(value);
@@ -86,7 +93,9 @@ class CarsController {
 
     private deleteCarId (req, res, next) {
         console.log('respuesta deleteCarId');
-        bbdd.deleteCarId(req.params.cars_id)
+        let car = new Car(req.params.cars_id);
+        //bbdd.deleteCarId(req.params.cars_id)
+        bbdd.deleteCarId(car)
         .then(
             value => {
                 res.json(value);

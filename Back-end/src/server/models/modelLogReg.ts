@@ -1,7 +1,7 @@
-import {players} from './modelPlayers';
+import {Player} from './modelPlayers';
 
-export class register{
-	player:players;
+export class Register {
+	player:Player;
 	token:string;
 }
 

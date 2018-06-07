@@ -1,5 +1,6 @@
 import * as express from 'express';
 import bbdd from '../bbdd';
+import {Team} from '../models/modelTeams';
 
 class TeamsController {
     public express;
@@ -47,7 +48,9 @@ class TeamsController {
 
     private addTeam (req, res, next) { //añade un nuevo team
         console.log('respuesta actualizarTeams');
-        bbdd.addTeam(req.body.name)
+        let team = new Team(req.body.name);
+        //bbdd.addTeam(req.body.name)
+        bbdd.addTeam(team)
         .then(
             value => {
                 res.json(value);

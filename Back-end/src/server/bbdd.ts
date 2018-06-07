@@ -1,10 +1,10 @@
 import * as mysql from 'mysql';
-import {cars} from './models/modelCars';
-import {historic} from './models/modelHistoric';
-import {register} from './models/modelLogReg';
-import {pavilions} from './models/modelPavilions';
-import {players} from './models/modelPlayers';
-import {teams} from './models/modelTeams';
+import {Car} from './models/modelCars';
+import {TripCars, TripPlayers, Historic} from './models/modelHistoric';
+import {Register} from './models/modelLogReg';
+import {Pavilion} from './models/modelPavilions';
+import {Player} from './models/modelPlayers';
+import {Team} from './models/modelTeams';
 
 class bbdd {
 	private conexion;
@@ -111,10 +111,10 @@ class bbdd {
 		});
 	}
 
-	public addTeam(name: string) {
+	public addTeam(team:Team) {
 		console.log(name);
 		return new Promise((resolve, reject) => {
-			this.conexion.query('INSERT INTO teams (name) VALUES (\''+ name +'\');', //añade un nuevo team
+			this.conexion.query('INSERT INTO teams (name) VALUES (\''+ team.name +'\');', //añade un nuevo team
 				(err, result) => {
 					if (err) reject(err);
 					resolve(result);
@@ -154,9 +154,9 @@ class bbdd {
 		});
 	}
 
-	public addCar(ownerId: number, owner: string, team: string, spendingGas: string, gasPrice:string, model: string, seats:number) {
+	public addCar(car:Car) {
 		return new Promise((resolve, reject) => {
-			this.conexion.query('INSERT INTO cars (ownerId, owner, team, spendingGas,gasPrice, model, seats) VALUES (\''+ ownerId +'\', \''+ owner +'\', \''+ team +'\', \''+ spendingGas +'\', \''+gasPrice+'\', \''+ model +'\', \''+seats+'\');',
+			this.conexion.query('INSERT INTO cars (ownerId, owner, team, spendingGas,gasPrice, model, seats) VALUES (\''+ car.ownerID +'\', \''+ car.owner +'\', \''+ car.team +'\', \''+ car.spendingGas +'\', \''+car.gasPrice+'\', \''+ car.model +'\', \''+car.seats+'\');',
 				(err, result) => {
 					if (err) reject(err);
 					resolve(result);
@@ -164,9 +164,9 @@ class bbdd {
 		});
 	}
 
-	public updateCarId(id: number, spendingGas:number, gasPrice:string, model:string, seats:string) {
+	public updateCarId(car:Car) {
 		return new Promise((resolve, reject) => {
-			this.conexion.query('UPDATE cars SET spendingGas=\''+spendingGas+'\', gasPrice=\''+gasPrice+'\', model=\''+model+'\', seats=\''+seats+'\' WHERE id = '+id+';', 
+			this.conexion.query('UPDATE cars SET spendingGas=\''+car.spendingGas+'\', gasPrice=\''+car.gasPrice+'\', model=\''+car.model+'\', seats=\''+car.seats+'\' WHERE id = '+car.id+';', 
 				function (err, result) {
 					if (err) return reject(err);
 					resolve(result);
@@ -174,9 +174,9 @@ class bbdd {
 		});
 	}
 
-	public deleteCarId(id: number) {
+	public deleteCarId(car: Car) {
 		return new Promise((resolve, reject) => {
-			this.conexion.query('DELETE FROM cars WHERE id= \''+ id +'\';',
+			this.conexion.query('DELETE FROM cars WHERE id= \''+ car.id +'\';',
 				function (err, result) {
 					if (err) return reject(err);
 					resolve(result);
@@ -185,6 +185,7 @@ class bbdd {
 	}
 
 	public getInfoCarId(id: number) {
+		console.log("getInfoCar", id);
 		return new Promise((resolve, reject) => {
 			this.conexion.query('SELECT * FROM cars WHERE id= \''+ id +'\';',
 				function (err, result) {
@@ -209,10 +210,10 @@ class bbdd {
 		});
 	}
 
-	public addPlayer(team: string, name: string, nick: string, dorsal: number) { //agregar un jugador, que no esta registrado
+	public addPlayer(player:Player) { //agregar un jugador, que no esta registrado
 		console.log(name);
 		return new Promise((resolve, reject) => {
-			this.conexion.query('INSERT INTO players (team, name, nick, dorsal, debt) VALUES (\''+ team +'\', \''+ name +'\', \''+ nick +'\', \''+ dorsal +'\', \'0\');',
+			this.conexion.query('INSERT INTO players (team, name, nick, dorsal, debt) VALUES (\''+ player.team +'\', \''+ player.name +'\', \''+ player.nick +'\', \''+ player.dorsal +'\', \'0\');',
 				(err, result) => {
 					if (err) reject(err);
 					resolve(result);
@@ -220,9 +221,9 @@ class bbdd {
 		});
 	}
 
-	public updatePlayer(id: number, name: string, dorsal: number, nick: string) {
+	public updatePlayer(player:Player) {
 		return new Promise((resolve, reject) => {
-			this.conexion.query('UPDATE players SET name=\''+name+'\', dorsal='+dorsal+', nick=\''+nick+'\' WHERE id = '+id+';',
+			this.conexion.query('UPDATE players SET name=\''+player.name+'\', dorsal='+player.dorsal+', nick=\''+player.nick+'\' WHERE id = '+player.id+';',
 				function (err, result) {
 					if (err) return reject(err);
 					resolve(result);
@@ -230,9 +231,9 @@ class bbdd {
 		});
 	}
 
-	public deletePlayer(id: number) {
+	public deletePlayer(player:Player) {
 		return new Promise((resolve, reject) => {
-			this.conexion.query('DELETE FROM players WHERE id= \''+ id +'\';',
+			this.conexion.query('DELETE FROM players WHERE id= \''+ player.id +'\';',
 				function (err, result) {
 					if (err) return reject(err);
 					resolve(result);
@@ -263,10 +264,10 @@ class bbdd {
 		});
 	}
 
-	public addPavilion(team: string, pavilion: string, distance: number) {
+	public addPavilion(pavilion:Pavilion) {
 		console.log(pavilion);
 		return new Promise((resolve, reject) => {
-			this.conexion.query('INSERT INTO pavilions (team, pavilion, distance) VALUES (\''+ team +'\', \''+ pavilion +'\', \''+ distance +'\');', 
+			this.conexion.query('INSERT INTO pavilions (team, pavilion, distance) VALUES (\''+ pavilion.team +'\', \''+ pavilion.pavilion +'\', \''+ pavilion.distance +'\');', 
 				(err, result) => {
 					if (err) reject(err);
 					resolve(result);
@@ -274,9 +275,9 @@ class bbdd {
 		});
 	}
 
-	public updatePavilion(id:number, pavilion: string, distance: number) {
+	public updatePavilion(pavilion:Pavilion) {
 		return new Promise((resolve, reject) => {
-			this.conexion.query('UPDATE pavilions SET pavilion=\''+ pavilion +'\', distance=\''+ distance +'\' WHERE id=\''+id+'\';',
+			this.conexion.query('UPDATE pavilions SET pavilion=\''+ pavilion.pavilion +'\', distance=\''+ pavilion.distance +'\' WHERE id=\''+pavilion.id+'\';',
 				function (err, result) {
 					if (err) return reject(err);
 					resolve(result);
@@ -284,9 +285,9 @@ class bbdd {
 		});
 	}
 
-	public deletePavilion(id:number) {
+	public deletePavilion(pavilion:Pavilion) {
 		return new Promise((resolve, reject) => {
-			this.conexion.query('DELETE FROM pavilions WHERE id= \''+ id +'\';',
+			this.conexion.query('DELETE FROM pavilions WHERE id= \''+ pavilion.id +'\';',
 				function (err, result) {
 					if (err) return reject(err);
 					resolve(result);
@@ -296,6 +297,7 @@ class bbdd {
 
 	public getPavilionDistance(pavilionId:number, team:string){
 		return new Promise((resolve, reject) => {
+			console.log(pavilionId + team)
 			this.conexion.query('SELECT distance FROM pavilions WHERE id= \''+ pavilionId +'\' AND team= \''+ team +'\';',
 				function (err, result) {
 					if (err) return reject(err);
@@ -319,10 +321,11 @@ class bbdd {
 	//+++++++++++++++  HISTORIC  ++++++++++++++++++
 
 
-	public addHistoric(team:string, pavilionId:string, date:string) {
+	public addHistoric(historic: Historic) {
 		return new Promise((resolve, reject) => {
-			if(team == "") return reject("No se especifica el equipo");
-			this.conexion.query('INSERT INTO historic (date, team, pavilionId) VALUES (\''+ date +'\', \''+ team +'\', \''+ pavilionId +'\' );',
+			if(historic.team == "") return reject("No se especifica el equipo");
+			console.log(historic.date);
+			this.conexion.query('INSERT INTO historic (date, team, pavilionId) VALUES (\''+ historic.date +'\', \''+ historic.team +'\', \''+ historic.pavilionId +'\' );',
 				function (err, result) {
 					if (err) return reject(err);
 					resolve(result);
@@ -330,18 +333,18 @@ class bbdd {
 		});
 	}
 
-	public addTripCar(date:string, team:string, carId:number) {
+	public addTripCar(trip: TripCars) {
 		return new Promise((resolve, reject) => {
-				this.conexion.query('INSERT INTO tripCars (date, team, carId) VALUES (\''+ date +'\', \''+ team +'\', \''+ carId +'\');',
+				this.conexion.query('INSERT INTO tripCars (date, team, carId) VALUES (\''+ trip.date +'\', \''+ trip.team +'\', \''+ trip.carId +'\');',
 				function (err, result) {
 					if (err) return reject(err);
 					resolve(result);
 				});
 		});
 	}
-	public addTripPlayer(date:string, team:string, playerId:number) {
+	public addTripPlayer(trip:TripPlayers) {
 		return new Promise((resolve, reject) => {
-				this.conexion.query('INSERT INTO tripPlayers (date, team, playerId) VALUES (\''+ date +'\', \''+ team +'\', \''+ playerId +'\');',
+				this.conexion.query('INSERT INTO tripPlayers (date, team, playerId) VALUES (\''+ trip.date +'\', \''+ trip.team +'\', \''+ trip.playerId +'\');',
 				function (err, result) {
 					if (err) return reject(err);
 					resolve(result);
@@ -350,10 +353,10 @@ class bbdd {
 	}
 
 	
-	public getHistoric(team:string, numData:number) {
+	public getHistoric(historic:Historic, numData:number) {
 		return new Promise((resolve, reject) => {
-			if(team == "") return reject("No se especifica el equipo");
-			this.conexion.query('SELECT * FROM historic WHERE team = \''+team+'\' ORDER BY date DESC LIMIT '+numData+';',
+			if(historic.team == "") return reject("No se especifica el equipo");
+			this.conexion.query('SELECT * FROM historic WHERE team = \''+historic.team+'\' ORDER BY date DESC LIMIT '+numData+';',
 				function (err, result) {
 					if (err) return reject(err);
 					resolve(result);
@@ -361,10 +364,10 @@ class bbdd {
 		});
 	}
 
-	public getTripCars(team:string, date:string) {
+	public getTripCars(trip: TripCars) {
 		return new Promise((resolve, reject) => {
-			if(team == "" || date == "" ) return reject("No se especifica el equipo o la fecha");
-			this.conexion.query('SELECT * FROM tripCars WHERE team = \''+team+'\' AND date="'+date+'";',
+			if(trip.team == "" || trip.date == "" ) return reject("No se especifica el equipo o la fecha");
+			this.conexion.query('SELECT * FROM tripCars WHERE team = \''+trip.team+'\' AND date="'+trip.date+'";',
 				function (err, result) {
 					if (err) return reject(err);
 					resolve(result);
@@ -372,10 +375,10 @@ class bbdd {
 		});
 	}
 
-	public getTripPlayers(team:string, date:string) {
+	public getTripPlayers(trip: TripPlayers) {
 		return new Promise((resolve, reject) => {
-			if(team == "" || date == "" ) return reject("No se especifica el equipo o la fecha");
-			this.conexion.query('SELECT * FROM tripPlayers WHERE team = \''+team+'\' AND date="'+date+'";',
+			if(trip.team == "" || trip.date == "" ) return reject("No se especifica el equipo o la fecha");
+			this.conexion.query('SELECT * FROM tripPlayers WHERE team = \''+trip.team+'\' AND date="'+trip.date+'";',
 				function (err, result) {
 					if (err) return reject(err);
 					resolve(result);
@@ -387,8 +390,9 @@ class bbdd {
 	//++++++++++++++++ DEBT +++++++++++++++++++
 	
 	public updatePlayerDebt(playerId:number, debt:number){
+		console.log("UpdatePlayerDebt", playerId, debt);		
 		return new Promise((resolve, reject) => {
-			this.conexion.query('UPDATE FROM playerts SET debt = "'+debt+'" WHERE id= \''+playerId+'\';',
+			this.conexion.query('UPDATE players SET debt = \''+debt+'\' WHERE id= \''+playerId+'\';',
 				function (err, result) {
 					if (err) return reject(err);
 					resolve(result);
@@ -397,8 +401,9 @@ class bbdd {
 	}
 
 	public getPlayerDebt(playerId:number){
+		console.log("getPlayerDebt", playerId);		
 		return new Promise((resolve, reject) => {
-			this.conexion.query('SELECT debt FROM players WHERE id= \''+playerId+'\';',
+			this.conexion.query('SELECT * FROM players WHERE id= \''+playerId+'\';',
 				function (err, result) {
 					if (err) return reject(err);
 					resolve(result);
